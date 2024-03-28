@@ -1,0 +1,75 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ rootNamespace }}Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Dashboard\HelperTrait;
+
+
+class {{ class }} extends Controller
+{
+    use HelperTrait ;
+
+    public function __construct()
+    {
+        $this->middleware('permission:roles-read')->only(['index']);
+        $this->middleware('permission:roles-create')->only(['create', 'store']);
+        $this->middleware('permission:roles-update')->only(['edit', 'update']);
+        $this->middleware('permission:roles-delete')->only(['destroy']);
+    }
+
+
+    public function index()
+    {
+        return view('dashboard.backend.admins.index');
+    }
+
+    
+    public function create()
+    {
+        return view('dashboard.backend.admins.create');
+
+    }
+
+   
+    public function store(Request $request)
+    {
+        $data = $request->except('img');
+        $this->addImage($request, $data, 'img', 'admins');
+        return redirect(route('admin.admins.index'))->with('success', 'Data Created Successfully');
+        
+    }
+
+    
+    public function show(string $id)
+    {
+        //
+    }
+
+   
+    public function edit(string $id)
+    {
+        $admin = User::where('id' , $id)->first();
+        return view('dashboard.backend.admins.edit' , compact('admin'));
+    }
+
+   
+    public function update(Request $request, string $id)
+    {
+        
+        $admin = User::where('id' , $id)->first();
+        $data = $request->except('img');
+        $this->updateImg($request, $data, 'img', 'admins' , $admin);
+        $admin->update($data);
+        return redirect(route('admin.admins.index'))->with('success', 'Data Created Successfully');
+
+    }
+
+   
+    public function destroy(string $id)
+    {
+        $admin = User::where('id' , $id)->delete();
+        return redirect(route('admin.admins.index'))->with('success', 'Data Deleted Successfully');
+    }
+}
