@@ -11,8 +11,10 @@ class Section extends Model
 
     protected $guarded =[];
 
-    public function products(){
-        return $this->hasMany(Product::class , 'section_id');
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_section', 'section_id', 'product_id');
     }
+
 
 }

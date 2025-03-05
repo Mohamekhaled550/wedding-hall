@@ -25,6 +25,50 @@
                 </h3>
                 <div class="card-toolbar ">
 
+                <div>
+    <h3 class="card-title align-items-start flex-column">
+        <span class="card-label fw-bolder fs-3 mb-1">New Paid Invoices</span>
+        <span class="text-muted mt-1 fw-bold fs-7">Over {{ $invoices->count() }} New Paid Invoices</span>
+    </h3>
+    <div class="card-toolbar">
+        <!-- Form for Month Filter -->
+        <form action="{{ route('admin.invoices-paid') }}" method="GET" class="d-flex align-items-center">
+            <select name="month" class="form-select form-select-sm" style="width: 150px; margin-right: 10px;">
+                <option value="">Select Month</option>
+                @for ($m = 1; $m <= 12; $m++)
+                    <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>
+                        {{ date('F', mktime(0, 0, 0, $m, 1)) }}
+                    </option>
+                @endfor
+            </select>
+            <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <h3 class="card-title align-items-start flex-column">
+        <span class="card-label fw-bolder fs-3 mb-1">New Paid Invoices</span>
+        <span class="text-muted mt-1 fw-bold fs-7">Over {{ $invoices->count() }} New Paid Invoices</span>
+    </h3>
+    <div class="card-toolbar">
+        <!-- Form for Month Filter -->
+        <form action="{{ route('admin.invoices-unpaid') }}" method="GET" class="d-flex align-items-center">
+            <select name="month" class="form-select form-select-sm" style="width: 150px; margin-right: 10px;">
+                <option value="">Select Month</option>
+                @for ($m = 1; $m <= 12; $m++)
+                    <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>
+                        {{ date('F', mktime(0, 0, 0, $m, 1)) }}
+                    </option>
+                @endfor
+            </select>
+            <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+        </form>
+    </div>
+</div>
+
+
+
                     <div class="card-header border-0 pt-5">
                         <div class="input-group mb-3">
                             <input id="searchInput" type="text" class="form-control" placeholder="Search here..." aria-label="Search here..." aria-describedby="basic-addon2">
@@ -40,7 +84,14 @@
                         Archived invoices
                     </a>
 
-                    @if (auth()->user()->hasPermission('invoices-create'))
+                      <!-- Calendar Button -->
+                    <a href="{{ route('admin.invoices.calendar') }}" class="btn btn-sm btn-light-primary" style="margin-right: 3px;">
+                    <span class="svg-icon svg-icon-2">
+                    <i class="fas fa-calendar"></i>
+                    </span>
+                     Calendar View
+                    </a>
+
                         <a href="{{ route('admin.invoices.create') }}" class="btn btn-sm btn-light-primary">
                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                         <span class="svg-icon svg-icon-2">
@@ -50,11 +101,13 @@
                             </svg>
                         </span
                         <!--end::Svg Icon-->New Invoices</a>
-                    @endif
+                    
 
                
                     
                 </div>
+                
+
             </div>
             <!--begin::Body-->
             <div class="card-body py-3">
@@ -66,18 +119,16 @@
                         <thead>
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="ps-4 min-w-40px rounded-start">#</th>
-                                <th class="min-w-50px">رقم الفاتوره</th>
-                                <th class="min-w-50px text-end rounded-end">تاريخ الفاتوره</th>
-                                <th class="min-w-50px text-end rounded-end">تاريخ الاستحقاق</th>
-                                <th class="min-w-40px text-end rounded-end">المنتج</th>
-                                <th class="min-w-40px text-end rounded-end">القسم</th>
-                                <th class="min-w-50px text-end rounded-end">مبلغ العموله</th>
-                                <th class="min-w-50px text-end rounded-end">مبلغ التحصيل</th>
-                                <th class="min-w-40px text-end rounded-end">الخصم</th>
-                                <th class="min-w-30px text-end rounded-end">نسبه الضريبه</th>
-                                <th class="min-w-50px text-end rounded-end">قيمه الضريبه</th>
-                                <th class="min-w-50px text-end rounded-end">الاجمالي</th>
-                                <th class="min-w-50px text-end rounded-end">الحاله</th>
+                                <th class="min-w-50px">Wedding id</th>
+                                <th class="min-w-50px text-end rounded-end">Reservation date</th>
+                                <th class="min-w-50px text-end rounded-end">Due date</th>
+                                <th class="min-w-40px text-end rounded-end">Dinner type</th>
+                                <th class="min-w-40px text-end rounded-end">Hall number</th>
+                                <th class="min-w-50px text-end rounded-end">Plate price</th>
+                                <th class="min-w-50px text-end rounded-end">Number of people</th>
+                                <th class="min-w-40px text-end rounded-end">total</th>
+                                <th class="min-w-30px text-end rounded-end">Discount</th>
+                                <th class="min-w-50px text-end rounded-end">stutas</th>
                                 <th class="min-w-85px text-end rounded-end"></th>
                                 <th class="min-w-25px text-end rounded-end"></th>
                             </tr>
@@ -108,7 +159,7 @@
                                     </td>
 
                                     <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->product_id }}</span>
+                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->product->name }}</span>
                                     </td>
 
                                     <td>
@@ -116,27 +167,19 @@
                                     </td>
 
                                     <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->Amount_Commission }}</span>
+                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->plate_price }}</span>
                                     </td>
 
                                     <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->Amount_collection }}</span>
-                                    </td>
-
-                                    <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->discount }}</span>
-                                    </td>
-
-                                    <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->rate_vat }}</span>
-                                    </td>
-
-                                    <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->value_vat }}</span>
+                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->number_of_people }}</span>
                                     </td>
 
                                     <td>
                                         <span class=" fw-bold  d-block fs-7">{{ $invoice->Total }}</span>
+                                    </td>
+
+                                    <td>
+                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->discount }}</span>
                                     </td>
 
                                     <td>

@@ -18,49 +18,56 @@ class ProductController extends Controller
         $this->middleware('permission:products-update')->only(['edit', 'update']);
         $this->middleware('permission:products-delete')->only(['destroy']);
     }
-    
+
     public function index()
     {
         $products = Product::orderByDesc('id')->get();
         return view('dashboard.backend.products.index' , compact('products'));
     }
 
-    
+
     public function create()
     {
         $sections = Section::get();
         return view('dashboard.backend.products.create' , compact('sections'));
     }
 
-   
+
     public function store(ProductRequest $request)
     {
-        $data = $request->except('img');
+        // استبعاد img و section_id من البيانات المحفوظة في المنتجات
+        $data = $request->except('img', 'section_id');
+
         if ($request->hasFile('img')) {
             $data['img'] = $request->file('img')->store('products');
         }
 
-        Product::create($data);
-   
-        return redirect(route('admin.products.index'))->with('success', 'Data Created Successfully');
-        
-    }
+        // إنشاء المنتج أولًا بدون section_id
+        $product = Product::create($data);
 
-    
+        // حفظ العلاقة في الجدول الوسيط إذا كان هناك سكاشن مختارة
+        if ($request->has('section_id')) {
+            $product->sections()->sync($request->section_id);
+        }
+
+        return redirect(route('admin.products.index'))->with('success', 'Data Created Successfully');
+}
+
+
     public function show(string $id)
     {
         //
     }
 
-   
+
     public function edit(string $id)
     {
         $sections = Section::get();
         $product = Product::where('id' , $id)->first();
         return view('dashboard.backend.products.edit' , compact('product' , 'sections'));
     }
- 
-   
+
+
     public function update(ProductRequest $request, string $id)
     {
         $product = Product::where('id' , $id)->first();
@@ -76,10 +83,10 @@ class ProductController extends Controller
 
         $product->update($data);
         return redirect(route('admin.products.index'))->with('success', 'Data Updated Successfully');
-        
+
     }
 
-   
+
     public function destroy(string $id)
     {
         $product = Product::where('id' , $id)->first();

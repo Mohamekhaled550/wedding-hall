@@ -20,10 +20,9 @@ class InvoiceRequest extends FormRequest
             'invoice_Date' => 'required',
             'section_id' => 'required',
             'product_id' => 'required',
-            'Amount_Commission' => 'required',
+            'plate_price' => 'required|numeric|min:0',
+            'number_of_people' => 'required|integer|min:1',
             'discount' => 'required',
-            'rate_vat' => 'required',
-            'value_vat' => 'required',
             'total' => 'required',
         ];
     }

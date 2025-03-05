@@ -178,7 +178,7 @@
                 @endif
 
                 {{-- invoices --}}
-                @if (auth()->user()->hasPermission('invoices-read'))
+
                     <div data-kt-menu-trigger="click" class="menu-item here  menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -250,8 +250,8 @@
                     
 
                     </div>
-                @endif
 
+                    
 
                 {{-- sections --}}
                 @if (auth()->user()->hasPermission('sections-read'))

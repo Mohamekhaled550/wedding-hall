@@ -9,10 +9,11 @@ class Product extends Model
 {
     use HasFactory;
     protected $guarded =[];
-   
-    public function section(){
-        return $this->belongsTo(Section::class , 'section_id');
-    } 
+
+    public function sections()
+    {
+        return $this->belongsToMany(Section::class, 'product_section', 'product_id', 'section_id');
+    }
 
 
 }

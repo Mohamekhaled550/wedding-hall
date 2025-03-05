@@ -34,12 +34,7 @@
             <div class="d-flex align-items-stretch flex-shrink-0">
 
 
-                @if (auth()->user()->hasRole('superadmin'))
-                    <!--begin::Notifications-->
-                        @include('dashboard.layouts.notify')
-                    <!--end::Notifications-->
-               @endif
-                
+          
                
            
                 <!--begin::User menu-->

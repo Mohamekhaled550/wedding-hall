@@ -18,7 +18,7 @@ class AddedInvoice extends Mailable
      */
     public function __construct()
     {
-        
+
     }
 
     /**

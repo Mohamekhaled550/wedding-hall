@@ -51,8 +51,8 @@ License: For each use you must have a valid license purchased only from above li
 					<!--begin::Wrapper-->
 					<div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
 						<!--begin::Form-->
-						
-                        <form role="form" method="POST" action="{{ route('login.post') }}">							
+
+                        <form role="form" method="POST" action="{{ route('login.post') }}">
                             @csrf
 
 							@if(session('success'))
@@ -63,17 +63,17 @@ License: For each use you must have a valid license purchased only from above li
                             <!--begin::Heading-->
 							<div class="text-center mb-10">
 								<!--begin::Title-->
-								<h1 class="text-dark mb-3">Sign In to Metronic</h1>
+								<h1 class="text-dark mb-3">Sign In to HAYAT HALL System</h1>
 								<!--end::Title-->
-								
+
 							</div>
-							
+
 							<div class="fv-row mb-10">
 								<label class="form-label fs-6 fw-bolder text-dark">Email</label>
 								<input class="form-control form-control-lg form-control-solid" type="email" name="email" autocomplete="off" />
 								<!--end::Input-->
 							</div>
-						
+
 							<div class="fv-row mb-10">
 								<!--begin::Wrapper-->
 								<div class="d-flex flex-stack mb-2">
@@ -81,7 +81,7 @@ License: For each use you must have a valid license purchased only from above li
 									<label class="form-label fw-bolder text-dark fs-6 mb-0">Password</label>
 									<a href="{{ route('reset-password') }}" class="link-primary fs-6 fw-bolder">Forgot Password ?</a>
 									<!--end::Label-->
-								
+
 								</div>
 								<!--end::Wrapper-->
 								<!--begin::Input-->
@@ -92,7 +92,7 @@ License: For each use you must have a valid license purchased only from above li
 							<!--begin::Actions-->
 							<div class="text-center">
                                     <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Login</button>
-	
+
 							</div>
 							<!--end::Actions-->
 						</form>

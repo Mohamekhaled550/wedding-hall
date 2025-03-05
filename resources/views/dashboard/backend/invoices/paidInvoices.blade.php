@@ -73,7 +73,7 @@
 
                                     <td>
                                         <a href="{{ route('admin.invoices.show' , $invoice->id )  }}" style="color: rgb(97, 97, 196)">
-                                          <span class="d-block fs-7">{{ $invoice->invoice_number }}</span>
+                                        <span class="d-block fs-7 num">{{ $invoice->invoice_number }}</span>
                                         </a>
                                     </td>
 
@@ -94,27 +94,19 @@
                                     </td>
 
                                     <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->Amount_Commission }}</span>
+                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->plate_price }}</span>
                                     </td>
 
                                     <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->Amount_collection }}</span>
-                                    </td>
-
-                                    <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->discount }}</span>
-                                    </td>
-
-                                    <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->rate_vat }}</span>
-                                    </td>
-
-                                    <td>
-                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->value_vat }}</span>
+                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->number_of_people }}</span>
                                     </td>
 
                                     <td>
                                         <span class=" fw-bold  d-block fs-7">{{ $invoice->Total }}</span>
+                                    </td>
+
+                                    <td>
+                                        <span class=" fw-bold  d-block fs-7">{{ $invoice->discount }}</span>
                                     </td>
 
                                     <td>
@@ -125,6 +117,7 @@
                                         @else
                                             <span class="text-warning fw-bold">{{ $invoice->Status }}</span>
                                         @endif
+
 
                                     </td>
 

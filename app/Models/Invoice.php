@@ -12,6 +12,7 @@ class Invoice extends Model
     use SoftDeletes;
 
     protected $guarded =[];
+    protected $dates = ['invoice_Date'];
 
     public function section(){
         

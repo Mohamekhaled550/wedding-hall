@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Dashboard\EmailController;
 use App\Http\Requests\InvoiceRequest;
 use App\Mail\AddedInvoice;
 use App\Models\Invoice;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class InvoiceController extends Controller
 {
@@ -28,24 +30,21 @@ class InvoiceController extends Controller
         $this->middleware('permission:invoices-update')->only(['edit', 'update']);
         $this->middleware('permission:invoices-delete')->only(['destroy']);
     }
-       
+
     public function index()
     {
         $invoices = Invoice::get();
-        return view('dashboard.backend.invoices.index' , compact('invoices'));   
+        return view('dashboard.backend.invoices.index' , compact('invoices'));
     }
 
-    
-    public function create()
+    public function create(Request $request)
     {
-        $sections = Section::get();
-        $products = Product::orderByDesc('id')->get();
-
-        return view('dashboard.backend.invoices.create' , compact('sections' , 'products'));
-
+        $sections = Section::with('products')->get(); // نجلب الأقسام بالمنتجات المرتبطة بها
+        return view('dashboard.backend.invoices.create', compact('sections'));
     }
 
-   
+
+
     public function store(InvoiceRequest $request)
     {
         $data = $request->except('img');
@@ -59,10 +58,11 @@ class InvoiceController extends Controller
         $product_name = Product::where('id' , $request->product_id)->first()->name;
         $section_name = Section::where('id' , $request->section_id)->first()->name;
         $invoice_id = Invoice::latest()->first()->id;
- 
+
         InvoicesDetails::create([
             'invoice_id' => $invoice_id,
             'invoice_number' => $request->invoice_number,
+
             'product' => $product_name,
             'Section' => $section_name,
             'Status' => 'غير مدفوعة',
@@ -70,7 +70,7 @@ class InvoiceController extends Controller
             'note' => $request->note,
             'user' => (Auth::user()->name),
         ]);
-        
+
 
         if ($request->hasFile('img')) {
             foreach ($request->file('img') as $file) {
@@ -85,7 +85,7 @@ class InvoiceController extends Controller
         }
 
         Notification::create([
-        
+
             'title' => 'تم اصافه فاتوره جديده ' . $invoice->invoice_number . ' بواسطه ' . Auth::user()->name ,
             'invoice_id' => $invoice->id ,
             'user_id' =>  Auth::user()->id
@@ -93,16 +93,16 @@ class InvoiceController extends Controller
 
         Mail::to(Auth::user()->email)->send(new AddedInvoice());
 
-         
+
         return redirect(route('admin.invoices.index'))->with('success', 'Data Created Successfully');
-        
+
     }
 
-    
+
     public function show(string $id)
     {
         $invoice = Invoice::with('attachments')->findOrFail($id);
-        
+
         $invoiceDetails = InvoicesDetails::where("invoice_id" , $id)->get();
         $invoicesAttachments = InvoicesAttachments::where("invoice_id" , $id)->get();
 
@@ -111,7 +111,7 @@ class InvoiceController extends Controller
                 $invoicesAttachment->file_name = basename($invoicesAttachment->file_name);
             }
         }
-   
+
         $notify = Notification::where('invoice_id' , $invoice->id)->first();
         if($notify){
             $notify->update([
@@ -124,12 +124,12 @@ class InvoiceController extends Controller
 
 
 
-   
+
     public function edit(string $id)
     {
         $sections = Section::get();
         $products = Product::orderByDesc('id')->get();
-        
+
         $invoice = Invoice::where('id' , $id)->first();
         return view('dashboard.backend.invoices.edit' , compact('invoice' , 'sections' , 'products'));
 
@@ -137,7 +137,7 @@ class InvoiceController extends Controller
 
 
 
-   
+
     public function update(InvoiceRequest $request, string $id)
     {
         $invoice = Invoice::where('id' , $id)->first();
@@ -148,13 +148,13 @@ class InvoiceController extends Controller
         $invoice->update($data);
         return redirect(route('admin.invoices.index'))->with('success', 'Data Updated Successfully');
 
-        
+
     }
 
-   
+
     public function destroy(string $id)
     {
-        $invoice = Invoice::where('id' , $id)->first();    
+        $invoice = Invoice::where('id' , $id)->first();
         $invoice->delete();
         return redirect(route('admin.invoices.index'))->with('success', 'Added to archive');
     }
@@ -164,9 +164,9 @@ class InvoiceController extends Controller
     public function getArchives()
     {
         $invoices = Invoice::onlyTrashed()->get();
-        return view('dashboard.backend.invoices.archived' , compact('invoices'));   
+        return view('dashboard.backend.invoices.archived' , compact('invoices'));
     }
-    
+
     public function deleteArchives($id)
     {
 
@@ -177,8 +177,8 @@ class InvoiceController extends Controller
             if ($attachment->file_name) {
                 Storage::delete($attachment->file_name);
             }
-            
-        }  
+
+        }
 
         $invoice->forceDelete();
         return redirect(route('admin.invoices.index'))->with('success', 'Data Deleted Successfully');
@@ -188,7 +188,7 @@ class InvoiceController extends Controller
     {
         Invoice::withTrashed()->where('id' , $id)->restore();
 
-        return redirect()->back()->with('success', 'Data Restored Successfully');   
+        return redirect()->back()->with('success', 'Data Restored Successfully');
     }
 
     public function getproducts($id)
@@ -210,7 +210,7 @@ class InvoiceController extends Controller
 
     public function Status_Updatee($id, Request $request)
     {
-        $invoice = Invoice::where('id' , $id)->first(); 
+        $invoice = Invoice::where('id' , $id)->first();
         $data = $request->only('Payment_Date' , 'Status');
         if ($request->Status) {
 
@@ -237,25 +237,45 @@ class InvoiceController extends Controller
                 'Value_Status' => $data['value_status'],
                 'user' => (Auth::user()->name),
             ]);
-            
+
         }
-        
+
 
         return redirect(route('admin.invoices.index'))->with('success', 'Data Updated Successfully');
 
     }
 
 
-  
-    public function Invoice_Paid()
+
+    public function Invoice_Paid(Request $request)
     {
-        $invoices = Invoice::where('value_status', 1)->get();
+        $query = Invoice::where('value_status', 1); // فواتير مدفوعة
+
+
+
+
+        // تصفية حسب الشهر إذا كان مُحددًا
+    if ($request->has('month') && !empty($request->month)) {
+        $query->whereMonth('Payment_Date', $request->month);
+    }
+
+    $invoices = $query->get();
         return view('dashboard.backend.invoices.index', compact('invoices'));
     }
 
     public function Invoice_Unpaid()
     {
-        $invoices = Invoice::where('value_status', 2)->get();
+        $query = Invoice::where('value_status', 2); // فواتير مدفوعة
+
+
+
+
+        // تصفية حسب الشهر إذا كان مُحددًا
+    if ($request->has('month') && !empty($request->month)) {
+        $query->whereMonth('Payment_Date', $request->month);
+    }
+
+    $invoices = $query->get();
         return view('dashboard.backend.invoices.index', compact('invoices'));
     }
 
@@ -265,12 +285,25 @@ class InvoiceController extends Controller
         return view('dashboard.backend.invoices.index', compact('invoices'));
     }
 
-       
+
     public function print(string $id)
     {
         $invoice = Invoice::where('id', $id)->first();
         return view('dashboard.backend.invoices.print' , compact('invoice'));
     }
+
+
+
+    public function calendar(Request $request)
+{
+    $section = $request->section; // استلام قيمة القسم من الفورم
+
+    // جلب الفواتير مع الحقول المهمة
+    $invoices = Invoice::select('id', 'invoice_number', 'invoice_Date', 'due_date', 'value_status', 'Status' , 'section_id')->get();
+    $sections = Section::all();
+
+    return view('dashboard.backend.invoices.calendar', compact('invoices','section'));
+}
 
 
 

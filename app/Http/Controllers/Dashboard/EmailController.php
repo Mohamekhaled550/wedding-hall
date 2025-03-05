@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
-use App\Mail\EmailMailable;
+
+use App\Mail\AddedInvoice;
 
 class EmailController extends Controller
 {
-    public function send() {
-        Mail::to(Auth::user()->email)->send(new EmailMailable());
-    
+    public function sendEmailToCustomer()
+    {
+        Mail::to($invoice->customer_email)->send(new AddedInvoice($invoice));
+        return 'email sent';
     }
 }

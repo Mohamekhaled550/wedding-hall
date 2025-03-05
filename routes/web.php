@@ -11,10 +11,11 @@ use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\Dashboard\InvoiceReportController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
 
-/* 
+/*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -46,6 +47,7 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
 
     /* Dashboard Routes */
     Route::middleware('auth')->group(function () {
+
         Route::get('/home'           , [HomeController::class , 'home'])->name('home');
         Route::resource('admins'     , AdminController::class);
         Route::resource('users'      , UserController::class)->except('show');
@@ -55,7 +57,9 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::resource('settings'   , SettingsController::class)->only(['index' , 'update']);
         Route::resource('invoices'   , InvoiceController::class);
 
+
         Route::get('send-email'   , [EmailController::class , 'send']);
+
 
         Route::get('edit-profile/{id}'     , [AdminController::class , 'editProfile'])->name('admins.edit-profile');
         Route::put('update-profile/{id}'   , [AdminController::class , 'updateProfile'])->name('admins.update-profile');
@@ -63,17 +67,17 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
 
 
 
-       
+
         Route::get('invoices/pay/{id}'                         , [InvoiceController::class , 'pay'])->name('invoices.pay');
         Route::post('/Status_Update/{id}'                      , [InvoiceController::class ,'Status_Updatee'])->name('Status_Updatee');
-      
+
         Route::get('/section/{id}'                             , [InvoiceController::class , 'getproducts']);
         Route::get('/get_file/{file_name}/{invoice_number}'    , [InvoicesAttachmentsController::class , 'get_file'])->name('get_file');
         Route::get('/open_file/{file_name}/{invoice_number}'   , [InvoicesAttachmentsController::class , 'open_file'])->name('open_file');
         Route::delete('/attachments/destroy/{invoice_number}'  , [InvoicesAttachmentsController::class , 'destroy'])->name('attachments.destroy');
         Route::get('/attachments/create/{id}'                  , [InvoicesAttachmentsController::class , 'create'])->name('attachments.create');
         Route::post('/attachments/store'                       , [InvoicesAttachmentsController::class , 'store'])->name('attachments.store');
-        
+
         Route::get('category-products/{section_id}'            , [SectionController::class , 'products']);
         Route::get('invoice-Paid'                              , [InvoiceController::class , 'Invoice_Paid'])->name('invoices-paid');
         Route::get('invoice-unPaid'                            , [InvoiceController::class , 'Invoice_Unpaid'])->name('invoices-unpaid');
@@ -81,7 +85,19 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::get('invoice-getArchives'                       , [InvoiceController::class , 'getArchives'])->name('invoices-getArchives');
         Route::get('invoice-restoreArchives/{id}'              , [InvoiceController::class , 'restoreArchives'])->name('invoices-restoreArchives');
         Route::get('invoice-print/{id}'                        , [InvoiceController::class , 'print'])->name('invoices-print');
+        Route::get('invoice-calendar'                          , [InvoiceController::class, 'calendar'])->name('invoices.calendar');
         Route::delete('invoice-deleteArchives/{id}'            , [InvoiceController::class , 'deleteArchives'])->name('invoices-deleteArchives');
-    }); 
- 
+        Route::get('reports/home'                              , [InvoiceReportController::class, 'reportshome'])->name('reports.home');
+        Route::get('reports'                                   , [InvoiceReportController::class, 'index'])->name('reports.index');
+        Route::post('reports/search'                           , [InvoiceReportController::class, 'search'])->name('reports.search');
+        Route::get('reports/indexi'                                   , [InvoiceReportController::class, 'indexi'])->name('reports.indexi');
+        Route::post('reports/searchi'                           , [InvoiceReportController::class, 'searchi'])->name('reports.searchi');
+
+
+
+
+
+
+    });
+
 });

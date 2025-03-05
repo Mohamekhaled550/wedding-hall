@@ -9,13 +9,13 @@
 
 
 <div class="card shadow mb-4">
- 
+
     <div class="card-header py-3 d-flex">
         <h6 class="m-0 font-weight-bold text-primary"> Products </h6>
         <div class="ml-auto">
             <a href="" class="btn btn-primary">
             <span><i class="fa fa-home"></i></span>
-            <span> Products </span> 
+            <span> Products </span>
         </a>
         </div>
     </div>
@@ -36,22 +36,26 @@
                 </div>
 
 
-                
+
 
                 <div class="d-flex col-6 flex-column mb-7 fv-row fv-plugins-icon-container">
                     <div class="d-flex flex-wrap gap-5">
                         <div class="fv-row w-100 flex-md-root fv-plugins-icon-container">
                             <label class="required form-label">Section</label>
-                            <select class="form-select mb-2 select2-hidden-accessible" name="section_id" data-control="select2" data-hide-search="true" data-placeholder="Select an option" data-select2-id="select2-data-16-dzu5" tabindex="-1" aria-hidden="true">
-                                <option value=""> </option>
-                                @foreach ( $sections as $section ) 
-                                  <option value="{{ $section->id }}">{{ $section->name }}</option>
-                                @endforeach
-                            </select>
+                            <select class="form-select mb-2 select2-hidden-accessible"
+                            name="section_id[]"
+                            multiple
+                            data-control="select2"
+                            data-hide-search="true"
+                            data-placeholder="Select Sections">
+                        @foreach ($sections as $section)
+                            <option value="{{ $section->id }}">{{ $section->name }}</option>
+                        @endforeach
+                    </select>
                             <div class="text-muted fs-7">Set the product Section</div>
                         </div>
-                            
-                    
+
+
                     </div>
                 </div>
 
@@ -70,7 +74,7 @@
 
             <div class="row">
 
-  
+
                 <div class="col-md-6 col-12 mb-3">
                         <label for="formFile" class="form-label">Image</label>
                         <input class="form-control image" type="file" id="formFile"
@@ -97,7 +101,7 @@
                     <span class="indicator-label">Submit</span>
                     <span class="indicator-progress">Please wait...</span>
                 </button>
-                
+
             </div>
 
         </form>
@@ -115,4 +119,3 @@
 @endsection
 
 
-     

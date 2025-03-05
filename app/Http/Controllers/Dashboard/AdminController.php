@@ -12,6 +12,7 @@ use App\Http\Controllers\Dashboard\HelperTrait;
 use App\Http\Requests\ForgetPasswordRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\scheme;
 use Illuminate\Support\Str;
 use App\Mail\ResetPassword;
 
@@ -121,8 +122,8 @@ class AdminController extends Controller
             $user->update([
                 'password' => $password,
             ]);
-            Mail::to(Auth::user()->email)->send(new ResetPassword($rand));
-            return redirect(route('login'))->with('success', 'please Check Your Email');
+            Mail::to($user->email)->send(new ResetPassword($rand));
+            return redirect(route('login'))->with('success', 'Please Check Your Email');
         } else {
             return redirect(route('reset-password'))->with('error', "This Email Dosen't have an account");
         }

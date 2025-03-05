@@ -1,0 +1,66 @@
+.fc-daygrid-day {
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #eae5e5 !important; /* حدود */
+    padding: 5px;
+    border-radius: 8px !important;  /* لجعل الشكل دائري قليلاً */
+    cursor: pointer !important; /* لتوضيح أن الأيام قابلة للتفاعل */
+    transition: all 0.3s ease !important;  /* تأثير عند التحويم */
+}
+
+.fc-daygrid-day-number {
+    font-size: 15px !important; /* حجم الخط */
+    font-weight: bold !important; /* جعل الرقم عريضاً */
+    color: #333 !important; /* لون الرقم */
+}
+
+.fc-daygrid-day:hover {
+    background-color: #b97070 !important; /* لون عند التحويم */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important; /* تأثير ظل */
+}
+
+.fc-event {
+    border-radius: 5px !important; /* لجعل الفعالية دائرية */
+    font-weight: bold;
+    text-align: center;
+}
+
+.fc-event:hover {
+    background-color: #0056b3 !important; /* تغيير اللون عند التحويم */
+    color: white !important;
+}
+
+
+
+/* تخصيص الشهور والأيام */
+.fc-toolbar-title {
+    font-family: 'Tajawal', sans-serif !important;
+    font-size: 20px !important;
+    color: #1e1b1b !important;
+}
+
+
+.fc-toolbar-chunk {
+    gap: 20px !important;
+}
+
+
+.fc-toolbar .fc-button:hover {
+    background-color: #fc9d9d !important;
+    color: #fff !important;
+
+    
+}
+
+
+.fc-toolbar .fc-button {
+    background-color: #f85252 !important;
+    color: #fff !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    border-radius: 4px solid #fff !important;
+    border: 10px solid #fff !important; /* الحدود البيضاء */
+
+}
+
+

@@ -11,14 +11,14 @@
 
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
-      
+
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
         <div class="card mb-5 mb-xl-8">
-            
+
             <div class="card-header border-0 pt-5">
                 <h3 class="card-title align-items-start flex-column">
                     <span class="card-label fw-bolder fs-3 mb-1">New Products</span>
@@ -59,8 +59,8 @@
                         <!--end::Table head-->
                         <!--begin::Table body-->
                         <tbody>
-                            
-                                
+
+
                                 @foreach ($products as $product)
                                     <tr>
                                         <td>
@@ -83,14 +83,16 @@
 
 
                                         <td>
-                                            @if ($product->section)
-                                                <span class="text-muted fw-bold text-muted d-block fs-7">{{$product->section->name}}</span>
+                                            @if ($product->sections && $product->sections->isNotEmpty())
+                                                <span class="text-muted fw-bold text-muted d-block fs-7">
+                                                    {{ $product->sections->pluck('name')->implode(', ') }}
+                                                </span>
                                             @else
                                                 <span class="text-muted fw-bold text-muted d-block fs-7">No Category</span>
                                             @endif
                                         </td>
-                                        
-                                        
+
+
                                         <td class="text-end">
                                             @if (auth()->user()->hasPermission('products-update'))
 
@@ -105,7 +107,7 @@
                                                     <!--end::Svg Icon-->
                                                 </a>
                                             @endif
-                                            
+
                                             @if (auth()->user()->hasPermission('products-delete'))
 
                                                 <a href="" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" data-bs-toggle="modal" data-bs-target="#Delete{{ $product->id }}">
@@ -118,13 +120,13 @@
                                                         </svg>
                                                     </span>
                                                 </a>
-                                            @endif   
+                                            @endif
                                             @include('dashboard.backend.products.delete')
                                         </td>
                                     </tr>
-                                    
+
                                 @endforeach
-                          
+
                         </tbody>
                         <!--end::Table body-->
                     </table>
@@ -134,9 +136,9 @@
             </div>
             <!--begin::Body-->
         </div>
-   
-       
-       
+
+
+
     </div>
     <!--end::Container-->
 </div>

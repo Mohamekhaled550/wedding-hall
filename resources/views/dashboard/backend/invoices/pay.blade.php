@@ -93,83 +93,53 @@
                 </div>
                 
                 
-                
-                <div class="d-flex col-4 flex-column mb-7 fv-row fv-plugins-icon-container">
-                    <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                        <span class="required">مبلغ العموله</span>
-                    </label>
-                    <input disabled type="text" id="Amount_Commission" name="Amount_Commission" value="{{ old('Amount_Commission' , $invoice->Amount_Commission) }}" class="form-control form-control-solid" placeholder="Enter Amount Commission" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                    @error('Amount_Commission') <span class="text-danger">{{ $message }}</span>  @enderror
-                </div>
-                
-                
+                 
+                <div class="row">
+    
+    <div class="d-flex col-4 flex-column mb-7 fv-row fv-plugins-icon-container">
+<div class="d-flex flex-wrap gap-5">
+<div class="fv-row w-100 flex-md-root fv-plugins-icon-container">
+<label class="required form-label">سعر الطبق</label>
+<input type="text" name="plate_price" value="{{ old('plate_price') }}" class="form-control form-control-solid" placeholder="plate_price" id="plate_price">
+<div class="text-muted fs-7">أدخل سعر الطبق</div>
+</div>
+</div>
+</div>
 
-                <div class="d-flex col-6 flex-column mb-7 fv-row fv-plugins-icon-container"></div>
+    </div>
+</div>
 
-            </div>
+<div class="row">
 
-            <div class="row">
+<div class="d-flex col-4 flex-column mb-7 fv-row fv-plugins-icon-container">
+<div class="d-flex flex-wrap gap-5">
+<div class="fv-row w-100 flex-md-root fv-plugins-icon-container">
+<label class="required form-label">عدد الأشخاص</label>
+<input type="number" name="number_of_people" value="{{ old('number_of_people') }}" class="form-control form-control-solid" placeholder="number of people" id="number_of_people">
+<div class="text-muted fs-7">أدخل عدد الأشخاص</div>
+</div>
+</div>
+</div>
 
-                <div class="d-flex col-4 flex-column mb-7 fv-row fv-plugins-icon-container">
-                    <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                        <span class="required">مبلغ التحصيل</span>
-                    </label>
-                    <input disabled type="text" name="Amount_collection" value="{{ old('Amount_collection' , $invoice->Amount_collection) }}" class="form-control form-control-solid" placeholder="Enter Amount collection" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" >
-                    @error('Amount_collection') <span class="text-danger">{{ $message }}</span>  @enderror
-                </div>
+<div class="d-flex col-4 flex-column mb-7 fv-row fv-plugins-icon-container">
+        <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+            <span class="required">الخصم</span>
+        </label>
+        <input type="text" name="discount" value="{{ old('discount' , 0) }}" class="form-control form-control-solid" placeholder="Enter discount" id="Discount">
+        @error('discount') <span class="text-danger">{{ $message }}</span>  @enderror
+    </div>
 
-                <div class="d-flex col-4 flex-column mb-7 fv-row fv-plugins-icon-container">
-                    <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                        <span class="required">الخصم</span>
-                    </label>
-                    <input disabled type="text" name="discount" value="{{ old('discount' , $invoice->discount) }}" class="form-control form-control-solid" placeholder="Enter discount" id="Discount">
-                    @error('discount') <span class="text-danger">{{ $message }}</span>  @enderror
-                </div>
-
-                
-                <div class="d-flex col-4 flex-column mb-7 fv-row fv-plugins-icon-container">
-                    <div class="d-flex flex-wrap gap-5">
-                        <div class="fv-row w-100 flex-md-root fv-plugins-icon-container">
-                            <label class="required form-label">نسبه ضريبه القيمه المضافه</label>
-                            <select disabled class="form-select mb-2 select2-hidden-accessible" name="rate_vat" data-control="select2" data-hide-search="true" data-placeholder="select"  data-select2-id="select2-data-16-dzu5" tabindex="-1" aria-hidden="true" id="Rate_VAT" onchange="myFunction()">
-                                <option value="{{ old('rate_vat' , $invoice->rate_vat) }}" selected>{{  $invoice->rate_vat }}</option>
-                                <option value=" 5%">5%</option>
-                                <option value="10%">10%</option>
-                            </select>
-                            <div class="text-muted fs-7">Set the invoice Rate Vat</div>
-                        </div>
-                    
-                    </div>
-                </div>
-
-                
-
-                
-               
-                
-                
+<div class="d-flex col-6 flex-column mb-7 fv-row fv-plugins-icon-container">
+<label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+<span class="required">الإجمالي</span>
+</label>
+<input type="text" name="total" value="{{ old('total') }}" class="form-control form-control-solid" placeholder="Enter total" id="Total" readonly>
+@error('total') <span class="text-danger">{{ $message }}</span>  @enderror
+</div>
 
 
-            </div>
+    
 
-            <div class="row">
-
-                <div class="d-flex col-6 flex-column mb-7 fv-row fv-plugins-icon-container">
-                    <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                        <span class="required">قيمة ضريبة القيمة المضافة</span>
-                    </label>
-                    <input disabled type="text" name="value_vat" value="{{ old('value_vat' , $invoice->value_vat) }}" class="form-control form-control-solid" placeholder="Enter value vat"  id="Value_VAT" readonly>
-                    @error('value_vat') <span class="text-danger">{{ $message }}</span>  @enderror
-                </div>
-
-                <div class="d-flex col-6 flex-column mb-7 fv-row fv-plugins-icon-container">
-                    <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                        <span class="required">الاجمالي شامل الضريبة</span>
-                    </label>
-                    <input disabled type="text" name="total" value="{{ old('total' , $invoice->Total) }}" class="form-control form-control-solid" placeholder="Enter total" id="Total" readonly>
-                    @error('total') <span class="text-danger">{{ $message }}</span>  @enderror
-                </div>
-                
                 
 
 
