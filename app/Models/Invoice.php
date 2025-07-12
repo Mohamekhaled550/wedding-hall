@@ -15,7 +15,7 @@ class Invoice extends Model
     protected $dates = ['invoice_Date'];
 
     public function section(){
-        
+
         return $this->belongsTo(Section::class , 'section_id');
     }
 
@@ -28,5 +28,11 @@ class Invoice extends Model
     public function attachments(){
         return $this->hasMany(InvoicesAttachments::class , 'invoice_id');
     }
+
+
+public function invoiceDetails()
+{
+    return $this->hasMany(InvoicesDetails::class);
+}
 
 }

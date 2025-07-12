@@ -6,12 +6,18 @@ use App\Http\Controllers\Dashboard\EmailController;
 use App\Http\Controllers\Dashboard\HomeController;
 use App\Http\Controllers\Dashboard\InvoiceController;
 use App\Http\Controllers\Dashboard\InvoicesAttachmentsController;
+use App\Http\Controllers\Dashboard\InvoicesDetailsController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\InvoiceReportController;
+use App\Http\Controllers\Dashboard\StockController;
+use App\Http\Controllers\Dashboard\StockMovementController;
+use App\Http\Controllers\Dashboard\ProductIngredientController;
+use App\Http\Controllers\Dashboard\IngredientController;
+use App\Http\Controllers\Dashboard\CategoryController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
 
@@ -56,6 +62,11 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::resource('products'   , ProductController::class)->except('show');
         Route::resource('settings'   , SettingsController::class)->only(['index' , 'update']);
         Route::resource('invoices'   , InvoiceController::class);
+        Route::resource('ingredients', \App\Http\Controllers\Dashboard\IngredientController::class);
+        Route::resource('product-ingredients', \App\Http\Controllers\Dashboard\ProductIngredientController::class);
+        Route::resource('stocks', \App\Http\Controllers\Dashboard\StockController::class);
+        Route::resource('stock-movements', \App\Http\Controllers\Dashboard\StockMovementController::class);
+        Route::resource('categories', CategoryController::class);
 
 
         Route::get('send-email'   , [EmailController::class , 'send']);
@@ -90,8 +101,11 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::get('reports/home'                              , [InvoiceReportController::class, 'reportshome'])->name('reports.home');
         Route::get('reports'                                   , [InvoiceReportController::class, 'index'])->name('reports.index');
         Route::post('reports/search'                           , [InvoiceReportController::class, 'search'])->name('reports.search');
-        Route::get('reports/indexi'                                   , [InvoiceReportController::class, 'indexi'])->name('reports.indexi');
-        Route::post('reports/searchi'                           , [InvoiceReportController::class, 'searchi'])->name('reports.searchi');
+        Route::put('/invoices/update-paid/{id}', [InvoicesDetailsController::class, 'updatePaidAmount'])->name('invoices.updatePaidAmount');
+
+
+
+
 
 
 

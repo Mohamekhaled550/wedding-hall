@@ -36,6 +36,41 @@
             </div>
 
 
+<div class="col-md-4">
+    <label for="excluded_section">عرض قسم:</label>
+    <select name="excluded_section" id="excluded_section" class="form-select" required>
+        <option value="all" {{ request('excluded_section') == 'all' ? 'selected' : '' }}>
+            بدون استثناء (جميع الأقسام)
+        </option>
+        @foreach($sections as $section)
+            <option value="{{ $section->name }}" {{ (request('excluded_section') ?? $excludedSection ?? '') == $section->name ? 'selected' : '' }}>
+                {{ $section->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+
+
+<div class="col-md-4">
+    <label for="status_filter">حالة الدفع:</label>
+    <select name="status_filter" id="status_filter" class="form-select" required>
+        <option value="all" {{ (request('status_filter') ?? $statusFilter ?? '') == 'all' ? 'selected' : '' }}>
+            الكل
+        </option>
+        <option value="1" {{ (request('status_filter') ?? $statusFilter ?? '') == '1' ? 'selected' : '' }}>
+            مدفوعة
+        </option>
+        <option value="2" {{ (request('status_filter') ?? $statusFilter ?? '') == '2' ? 'selected' : '' }}>
+            غير مدفوعة
+        </option>
+        <option value="3" {{ (request('status_filter') ?? $statusFilter ?? '') == '3' ? 'selected' : '' }}>
+            مدفوعة جزئياً
+        </option>
+    </select>
+</div>
+
+
             <div class="col-md-4 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary w-100">Search</button>
             </div>
@@ -58,11 +93,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($invoices as $invoice)
-                        @if ($invoice->section->name == 'Hall 1')  
+                  @forelse ($filtered as $invoice)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $invoice->invoice_number }}</td>
+                                <td> <a href="{{ route('admin.invoices.show' , $invoice->id )  }}" style="color: rgb(97, 97, 196)">
+                                          <span class="d-block fs-7 num">{{ $invoice->invoice_number }}</span>
+                                        </a>
+                                </td>
                                 <td>{{ $invoice->due_date }}</td>
                                 <td>{{ $invoice->section->name }}</td>
                                 <td>{{ $invoice->Total }}</td>
@@ -77,14 +114,14 @@
                                     @endif
                                 </td>
                             </tr>
-                        @endif
+
                     @empty
                         <tr>
                             <td colspan="7" class="text-center">No invoices found.</td>
                         </tr>
                     @endforelse
                 </tbody>
-                
+
                 <tr>
                     <td colspan="8" class="text-end fw-bold">
                         Total Amount for {{ isset($year) ? $year : 'N/A' }}/{{ isset($month) ? $month : 'N/A' }}

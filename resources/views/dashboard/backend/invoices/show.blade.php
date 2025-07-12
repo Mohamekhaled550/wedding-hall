@@ -11,15 +11,15 @@
     <!--begin::Container-->
 
     <div id="kt_content_container" class="container-xxl">
-      
+
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
         <div class="card mb-5 mb-xl-8">
-            
-         
+
+
             <!--end::Header-->
             <!--begin::Body-->
             <div class="card-body py-3">
@@ -27,7 +27,7 @@
                 <div class="table-responsive">
                     <!--begin::Table-->
                     <div class="card mb-5 mb-xl-8">
-          
+
                         <ul class="nav nav-tabs nav-justified" role="tablist">
                             <li class="nav-item fw-bolder fs-6" role="presentation">
                               <a class="nav-link active " id="justified-tab-0" data-bs-toggle="tab" href="#justified-tabpanel-0" role="tab" aria-controls="justified-tabpanel-0" aria-selected="true"> Invoice Information </a>
@@ -41,108 +41,97 @@
                           </ul>
 
                           <div class="tab-content pt-5" id="tab-content">
-                            
+
                             <div class="tab-pane active" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                
+
                                 <div class="row">
+
+
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                    
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
-                                                <span class="card-label fw-bolder fs-3 mb-1"> Invoice Number</span>
-                                            </h3>
-                                            <div class="card-toolbar">
-                                                <span class="card-label  fs-5 mb-1">{{ $invoice->invoice_number }}</span>
-                                            </div>
-                                        </div>
-        
-                                    </div>
-        
-                                    <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                    
-                                        <div class="card-header border-0 pt-5">
-                                            <h3 class="card-title align-items-start flex-column">
-                                                <span class="card-label fw-bolder fs-3 mb-1"> Invoice Date</span>
+                                                <span class="card-label fw-bolder fs-3 mb-1"> Reservation Date</span>
                                             </h3>
                                             <div class="card-toolbar">
                                                 <span class="card-label  fs-5 mb-1">{{ $invoice->invoice_Date }}</span>
                                             </div>
                                         </div>
-        
+
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                    
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
-                                                <span class="card-label fw-bolder fs-3 mb-1">Due Date</span>
+                                                <span class="card-label fw-bolder fs-3 mb-1">Wedding Date</span>
                                             </h3>
                                             <div class="card-toolbar">
                                                 <span class="card-label  fs-5 mb-1">{{ $invoice->due_date }}</span>
                                             </div>
                                         </div>
-        
+
                                     </div>
-        
+
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                        
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
-                                                <span class="card-label fw-bolder fs-3 mb-1">Product</span>
+                                                <span class="card-label fw-bolder fs-3 mb-1">Dinner Type</span>
                                             </h3>
                                             <div class="card-toolbar">
                                                 <span class="card-label  fs-5 mb-1">{{ $invoice->product->name}}</span>
                                             </div>
                                         </div>
-        
+
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                    
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
-                                                <span class="card-label fw-bolder fs-3 mb-1">Section</span>
+                                                <span class="card-label fw-bolder fs-3 mb-1">Hall </span>
                                             </h3>
                                             <div class="card-toolbar">
                                                 <span class="card-label  fs-5 mb-1">{{ $invoice->section->name }}</span>
                                             </div>
                                         </div>
-        
+
                                     </div>
-        
+
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                        
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
-                                                <span class="card-label fw-bolder fs-3 mb-1">Amount Commission</span>
+                                                <span class="card-label fw-bolder fs-3 mb-1">Number of People</span>
                                             </h3>
                                             <div class="card-toolbar">
-                                                <span class="card-label  fs-5 mb-1">{{ $invoice->Amount_Commission }}</span>
+                                                <span class="card-label  fs-5 mb-1">{{ $invoice->number_of_people }}</span>
                                             </div>
                                         </div>
-        
+
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                    
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
-                                                <span class="card-label fw-bolder fs-3 mb-1">Amount Collection</span>
+                                                <span class="card-label fw-bolder fs-3 mb-1">Plate Price</span>
                                             </h3>
                                             <div class="card-toolbar">
-                                                <span class="card-label  fs-5 mb-1">{{ $invoice->Amount_collection }}</span>
+                                                <span class="card-label  fs-5 mb-1">{{ $invoice->plate_price }}</span>
                                             </div>
                                         </div>
-        
+
                                     </div>
-        
+
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                        
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
                                                 <span class="card-label fw-bolder fs-3 mb-1">Discount</span>
@@ -151,40 +140,18 @@
                                                 <span class="card-label  fs-5 mb-1">{{ $invoice->discount }}</span>
                                             </div>
                                         </div>
-        
+
                                     </div>
                                 </div>
 
                                 <div class="row">
-                                    <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                    
-                                        <div class="card-header border-0 pt-5">
-                                            <h3 class="card-title align-items-start flex-column">
-                                                <span class="card-label fw-bolder fs-3 mb-1">Rate Vat</span>
-                                            </h3>
-                                            <div class="card-toolbar">
-                                                <span class="card-label  fs-5 mb-1">{{ $invoice->rate_vat }}</span>
-                                            </div>
-                                        </div>
-        
-                                    </div>
-        
-                                    <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                        
-                                        <div class="card-header border-0 pt-5">
-                                            <h3 class="card-title align-items-start flex-column">
-                                                <span class="card-label fw-bolder fs-3 mb-1">Value vat</span>
-                                            </h3>
-                                            <div class="card-toolbar">
-                                                <span class="card-label  fs-5 mb-1">{{ $invoice->value_vat }}</span>
-                                            </div>
-                                        </div>
-        
-                                    </div>
+
+
+
                                 </div>
                                 <div class="row">
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                    
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
                                                 <span class="card-label fw-bolder fs-3 mb-1">Total</span>
@@ -193,11 +160,11 @@
                                                 <span class="card-label  fs-5 mb-1">{{ $invoice->Total }}</span>
                                             </div>
                                         </div>
-        
+
                                     </div>
-        
+
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                        
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
                                                 <span class="card-label fw-bolder fs-3 mb-1">Invoice Status</span>
@@ -212,14 +179,14 @@
                                                 @endif
                                             </div>
                                         </div>
-        
+
                                     </div>
                                 </div>
 
-                          
+
                                 <div class="row">
                                     <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                    
+
                                         <div class="card-header border-0 pt-5">
                                             <h3 class="card-title align-items-start flex-column">
                                                 <span class="card-label fw-bolder fs-3 mb-1">Notes</span>
@@ -228,82 +195,83 @@
                                                 <span class="card-label  fs-5 mb-1">{{ $invoice->note }}</span>
                                             </div>
                                         </div>
-        
+
                                     </div>
-        
-                                </div>
 
-                            
-                            </div>
-
-                            <div class="tab-pane" id="justified-tabpanel-1" role="tabpanel" aria-labelledby="justified-tab-1">
-
-
-                                <div class="table-responsive">
-                                    <!--begin::Table-->
-                                    <table class="table align-middle gs-0 gy-4">
-                                        <!--begin::Table head-->
-                                        <thead>
-                                            <tr class="fw-bolder text-muted bg-light">
-                                                <th class="ps-4 min-w-100px rounded-start">#</th>
-                                                <th class="ps-4 min-w-325px rounded-start">Added By</th>
-                                                <th class="min-w-250px">Payment Date</th>
-                                                <th class="min-w-75px text-start rounded-end">Invoice Status</th>
-                                            </tr>
-                                        </thead>
-                                        <!--end::Table head-->
-                                        <!--begin::Table body-->
-                                        <tbody>
-                                            
-                                                
-                                                @foreach ($invoiceDetails as $invoiceDetail)
-                                                    <tr>
-                                                        <td>
-                                                            <span class=" fw-bold  d-block fs-7">{{$loop->iteration }}</span>
-                                                        </td>
-
-                                                        <td>
-                                                            <span class=" fw-bold  d-block fs-7">{{ $invoiceDetail->user }}</span>
-                                                        </td>
-
-                                                        <td>
-                                                            @if ($invoiceDetail->Payment_Date)
-                                                                <span class="fw-bold  d-block fs-7">{{ $invoiceDetail->Payment_Date }}</span>
-                                                            @else
-                                                                <span class="fw-bold d-block fs-7">None</span>
-                                                            @endif                                                        
-                                                        </td>
-
-                                                        <td>
-                                                            @if ($invoiceDetail->Value_Status == 1)
-                                                                <span class="text-success card-label  fs-5 mb-1">{{ $invoiceDetail->Status }}</span>
-                                                            @elseif($invoiceDetail->Value_Status == 2)
-                                                                <span class="text-danger card-label  fs-5 mb-1">{{ $invoiceDetail->Status }}</span>
-                                                            @else
-                                                                <span class="text-warning card-label  fs-5 mb-1">{{ $invoiceDetail->Status }}</span>
-                                                            @endif                                                        
-                                                        </td>
-
-                                                    </tr>
-                                                    
-                                                @endforeach
-                                          
-                                        </tbody>
-                                        <!--end::Table body-->
-                                    </table>
-                                    <!--end::Table-->
                                 </div>
 
 
-
-
-                               
-
-                                
                             </div>
+
+                          <div class="tab-pane" id="justified-tabpanel-1" role="tabpanel" aria-labelledby="justified-tab-1">
+    <div class="table-responsive">
+        <table class="table align-middle gs-0 gy-4">
+            <thead>
+                <tr class="fw-bolder text-muted bg-light">
+                    <th class="ps-4 min-w-50px rounded-start">#</th>
+                    <th class="min-w-150px">Added By</th>
+                    <th class="min-w-150px">Payment Date</th>
+                    <th class="min-w-150px">Total</th>
+                    <th class="min-w-150px">Paid</th>
+                    <th class="min-w-150px">Remaining</th>
+                    <th class="min-w-150px">Invoice Status</th>
+                    <th class="min-w-150px">Update Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($invoiceDetails as $invoiceDetail)
+                    @php
+                        $invoice = $invoiceDetail->invoice;
+                        $total = $invoice->Total ?? 0;
+                        $paid = $invoiceDetail->paid_amount ?? 0;
+                        $remaining = $total - $paid;
+                    @endphp
+                    <tr>
+                        <td><span class="fw-bold d-block fs-7">{{ $loop->iteration }}</span></td>
+
+                        <td><span class="fw-bold d-block fs-7">{{ $invoiceDetail->user }}</span></td>
+
+                        <td>
+                            <span class="fw-bold d-block fs-7">
+                                {{ $invoiceDetail->Payment_Date ? $invoiceDetail->Payment_Date : 'None' }}
+                            </span>
+                        </td>
+
+                        <td><span class="fw-bold d-block fs-7">{{ number_format($total, 2) }}</span></td>
+
+                        <td><span class="fw-bold d-block fs-7 text-success">{{ number_format($paid, 2) }}</span></td>
+
+                        <td><span class="fw-bold d-block fs-7 text-danger">{{ number_format($remaining, 2) }}</span></td>
+
+                        <td>
+                            @if ($paid == 0)
+                                <span class="text-danger card-label fs-5 mb-1">غير مدفوعة</span>
+                            @elseif ($paid < $total)
+                                <span class="text-warning card-label fs-5 mb-1">مدفوعة جزئياً</span>
+                            @else
+                                <span class="text-success card-label fs-5 mb-1">مدفوعة كلياً</span>
+                            @endif
+                        </td>
+
+                        <td>
+                            <form action="{{ route('admin.invoices.updatePaidAmount', $invoiceDetail->id) }}" method="POST" class="d-flex">
+                                @csrf
+                                @method('PUT')
+                                <input type="number" name="paid_amount" step="0.01" value="{{ $paid }}" class="form-control form-control-sm me-2" style="width: 90px;">
+                                <button type="submit" class="btn btn-sm btn-primary">تحديث</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 
                             @if ($invoicesAttachments)
-                                
+
                                 <div class="tab-pane" id="justified-tabpanel-2" role="tabpanel" aria-labelledby="justified-tab-2">
                                     <div class="card-header border-0 pt-5">
                                         <h3 class="card-title align-items-start flex-column">
@@ -322,12 +290,12 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    
-                                    @foreach ($invoicesAttachments as $invoicesAttachment) 
- 
+
+                                    @foreach ($invoicesAttachments as $invoicesAttachment)
+
                                         <div class="row">
                                             <div class="tab-pane active col-md-12 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                                
+
                                                 <div class="card-header border-0 pt-5">
                                                     <h3 class="card-title align-items-start flex-column">
                                                         <span class="card-label fw-bolder fs-3 mb-1">File name</span>
@@ -336,14 +304,14 @@
                                                         <span class="card-label  fs-5 mb-1">{{ $invoicesAttachment->file_name}}</span>
                                                     </div>
                                                 </div>
-                
+
                                             </div>
 
                                         </div>
 
                                         <div class="row">
                                             <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                                
+
                                                 <div class="card-header border-0 pt-5">
                                                     <h3 class="card-title align-items-start flex-column">
                                                         <span class="card-label fw-bolder fs-3 mb-1">Created by</span>
@@ -352,11 +320,11 @@
                                                         <span class="card-label  fs-5 mb-1">{{ $invoicesAttachment->Created_by}}</span>
                                                     </div>
                                                 </div>
-                
+
                                             </div>
-                
+
                                             <div class="tab-pane active col-md-6 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                            
+
                                                 <div class="card-header border-0 pt-5">
                                                     <h3 class="card-title align-items-start flex-column">
                                                         <span class="card-label fw-bolder fs-3 mb-1">Created at</span>
@@ -365,14 +333,14 @@
                                                         <span class="card-label  fs-5 mb-1">{{ $invoicesAttachment->created_at }}</span>
                                                     </div>
                                                 </div>
-                
+
                                             </div>
                                         </div>
 
                                         <div class="row">
-                
+
                                             <div class="tab-pane active col-md-12 col-12 mb-3" id="justified-tabpanel-0" role="tabpanel" aria-labelledby="justified-tab-0">
-                                            
+
                                                 <div class="card-header border-0 pt-5">
                                                     <h3 class="card-title align-items-start flex-column">
                                                         <span class="card-label fw-bolder fs-3 mb-1">Actions</span>
@@ -385,7 +353,7 @@
 
                                                     </div>
                                                 </div>
-                
+
                                             </div>
                                         </div>
                                         <hr>
@@ -414,14 +382,14 @@
                                         </div>
                                     </div>
                                     <hr>
-                                        
+
 
                                 </div>
 
                             @endif
 
                         </div>
-            
+
                     </div>
                     <!--end::Table-->
                 </div>
@@ -429,9 +397,9 @@
             </div>
             <!--begin::Body-->
         </div>
-   
-       
-       
+
+
+
     </div>
     <!--end::Container-->
 </div>

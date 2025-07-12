@@ -1,132 +1,99 @@
 <!DOCTYPE html>
-<!--
-Author: Keenthemes
-Product Name: Metronic - Bootstrap 5 HTML, VueJS, React, Angular & Laravel Admin Dashboard Theme
-Purchase: https://1.envato.market/EA4JP
-Website: http://www.keenthemes.com
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Dribbble: www.dribbble.com/keenthemes
-Like: www.facebook.com/keenthemes
-License: For each use you must have a valid license purchased only from above link in order to legally use the theme for your project.
--->
-<html lang="en">
-	<!--begin::Head-->
-	<head><base href="../../../">
-		<title>Login</title>
-		<meta charset="utf-8" />
-		<meta name="description" content="The most advanced Bootstrap Admin Theme on Themeforest trusted by 94,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue &amp; Laravel versions. Grab your copy now and get life-time updates for free." />
-		<meta name="keywords" content="Metronic, bootstrap, bootstrap 5, Angular, VueJs, React, Laravel, admin themes, web design, figma, web development, free templates, free admin themes, bootstrap theme, bootstrap template, bootstrap dashboard, bootstrap dak mode, bootstrap button, bootstrap datepicker, bootstrap timepicker, fullcalendar, datatables, flaticon" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta property="og:locale" content="en_US" />
-		<meta property="og:type" content="article" />
-		<meta property="og:title" content="Metronic - Bootstrap 5 HTML, VueJS, React, Angular &amp; Laravel Admin Dashboard Theme" />
-		<meta property="og:url" content="https://keenthemes.com/metronic" />
-		<meta property="og:site_name" content="Keenthemes | Metronic" />
-		<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-		<link rel="shortcut icon" href="{{ asset('dashboard/assets/media/logos/favicon.ico')}}" />
-		<!--begin::Fonts-->
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-		<!--end::Fonts-->
-		<!--begin::Global Stylesheets Bundle(used by all pages)-->
-		<link href="{{ asset('dashboard/assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
-		<link href="{{ asset('dashboard/assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
-		<!--end::Global Stylesheets Bundle-->
-	</head>
-	<!--end::Head-->
-	<!--begin::Body-->
-	<body id="kt_body" class="bg-dark">
-		<!--begin::Main-->
-		<!--begin::Root-->
-		<div class="d-flex flex-column flex-root">
-			<!--begin::Authentication - Sign-in -->
-			<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url(assets/media/illustrations/sketchy-1/14-dark.png">
-				<!--begin::Content-->
-				<div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
-					<!--begin::Logo-->
-					<a href="" class="mb-12">
-						<img alt="Logo" src="{{ asset('dashboard/assets/media/logos/logo-2.svg')}}" class="h-40px" />
-					</a>
-					<!--end::Logo-->
-					<!--begin::Wrapper-->
-					<div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
-						<!--begin::Form-->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - Hayat Halls</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
 
-                        <form role="form" method="POST" action="{{ route('login.post') }}">
-                            @csrf
+        body {
+            background: linear-gradient(to bottom right, #3a1c1c, #000);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
 
-							@if(session('success'))
-								<div class="alert alert-success">
-									{{ session('success') }}
-								</div>
-							@endif
-                            <!--begin::Heading-->
-							<div class="text-center mb-10">
-								<!--begin::Title-->
-								<h1 class="text-dark mb-3">Sign In to HAYAT HALL System</h1>
-								<!--end::Title-->
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
 
-							</div>
+        .login-container img {
+            width: 80px;
+            margin-bottom: 1rem;
+        }
 
-							<div class="fv-row mb-10">
-								<label class="form-label fs-6 fw-bolder text-dark">Email</label>
-								<input class="form-control form-control-lg form-control-solid" type="email" name="email" autocomplete="off" />
-								<!--end::Input-->
-							</div>
+        .login-container h1 {
+            font-size: 24px;
+            margin-bottom: 1rem;
+            color: #f5f5f5;
+        }
 
-							<div class="fv-row mb-10">
-								<!--begin::Wrapper-->
-								<div class="d-flex flex-stack mb-2">
-									<!--begin::Label-->
-									<label class="form-label fw-bolder text-dark fs-6 mb-0">Password</label>
-									<a href="{{ route('reset-password') }}" class="link-primary fs-6 fw-bolder">Forgot Password ?</a>
-									<!--end::Label-->
+        .login-container input[type="email"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 0.5rem 0;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
 
-								</div>
-								<!--end::Wrapper-->
-								<!--begin::Input-->
-								<input class="form-control form-control-lg form-control-solid" type="password" name="password" autocomplete="off" />
-								<!--end::Input-->
-							</div>
-							<!--end::Input group-->
-							<!--begin::Actions-->
-							<div class="text-center">
-                                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Login</button>
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background: #c9aa62;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 1rem;
+        }
 
-							</div>
-							<!--end::Actions-->
-						</form>
-						<!--end::Form-->
-					</div>
-					<!--end::Wrapper-->
-				</div>
-				<!--end::Content-->
-				<!--begin::Footer-->
-				<div class="d-flex flex-center flex-column-auto p-10">
-					<!--begin::Links-->
-					<div class="d-flex align-items-center fw-bold fs-6">
-						<a href="https://keenthemes.com" class="text-muted text-hover-primary px-2">About</a>
-						<a href="mailto:support@keenthemes.com" class="text-muted text-hover-primary px-2">Contact</a>
-						<a href="https://1.envato.market/EA4JP" class="text-muted text-hover-primary px-2">Contact Us</a>
-					</div>
-					<!--end::Links-->
-				</div>
-				<!--end::Footer-->
-			</div>
-			<!--end::Authentication - Sign-in-->
-		</div>
-		<!--end::Root-->
-		<!--end::Main-->
-		<!--begin::Javascript-->
-		<script>var hostUrl = "assets/";</script>
-		<!--begin::Global Javascript Bundle(used by all pages)-->
-		<script src="{{ asset('dashboard/assets/plugins/global/plugins.bundle.js')}}"></script>
-		<script src="{{ asset('dashboard/assets/js/scripts.bundle.js')}}"></script>
-		<!--end::Global Javascript Bundle-->
-		<!--begin::Page Custom Javascript(used by this page)-->
-		<script src="{{ asset('dashboard/assets/js/custom/authentication/sign-in/general.js')}}"></script>
-		<!--end::Page Custom Javascript-->
-		<!--end::Javascript-->
-	</body>
-	<!--end::Body-->
+        .login-container button:hover {
+            background: #b89952;
+        }
+
+        .login-container .footer {
+            margin-top: 1rem;
+            font-size: 14px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+<img alt="Hayat Logo" src="{{ asset('dashboard/assets/media/logos/logo-hayat-40px.png')}}" class="h-40px" />
+        <h1>Welcome to HAYAT System Halls</h1>
+        <form method="POST" action="{{ route('login.post') }}">
+            @csrf
+            <input type="email" name="email" placeholder="E-mail " required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login </button>
+        </form>
+        <div class="footer">
+            <a href="{{ route('reset-password') }}" style="color: #f5f5f5; text-decoration: underline;"> Forget Password? </a>
+        </div>
+    </div>
+</body>
 </html>

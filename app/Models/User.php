@@ -10,12 +10,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements LaratrustUser 
+class User extends Authenticatable implements LaratrustUser
 {
     use HasRolesAndPermissions;
     use HasApiTokens, HasFactory, Notifiable ;
 
-    
+
+
     protected $fillable = [
         'name',
         'email',
@@ -24,13 +25,13 @@ class User extends Authenticatable implements LaratrustUser
         'type'
     ];
 
-    
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',

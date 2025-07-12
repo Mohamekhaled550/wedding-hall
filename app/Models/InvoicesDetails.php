@@ -12,5 +12,12 @@ class InvoicesDetails extends Model
     protected $guarded =[];
 
 
+    // InvoiceDetail.php
+public function invoice()
+{
+    return $this->belongsTo(Invoice::class);
+}
+
+
 
 }

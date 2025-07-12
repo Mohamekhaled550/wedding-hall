@@ -1,66 +1,92 @@
+/* 📅 خلايا الأيام */
 .fc-daygrid-day {
     text-align: center;
     vertical-align: middle;
-    border: 1px solid #eae5e5 !important; /* حدود */
-    padding: 5px;
-    border-radius: 8px !important;  /* لجعل الشكل دائري قليلاً */
-    cursor: pointer !important; /* لتوضيح أن الأيام قابلة للتفاعل */
-    transition: all 0.3s ease !important;  /* تأثير عند التحويم */
+    border: 1px solid #f3dfd6 !important;
+    padding: 10px;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease-in-out !important;
+    background-color: #fff9f6; /* لون خلفية ناعم */
 }
 
+/* 🔢 رقم اليوم */
 .fc-daygrid-day-number {
-    font-size: 15px !important; /* حجم الخط */
-    font-weight: bold !important; /* جعل الرقم عريضاً */
-    color: #333 !important; /* لون الرقم */
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #8b5e3c !important;
+    font-family: 'Tajawal', sans-serif !important;
 }
 
+/* 🖱️ عند التحويم */
 .fc-daygrid-day:hover {
-    background-color: #b97070 !important; /* لون عند التحويم */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important; /* تأثير ظل */
+    background-color: #ffe3cf !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
 }
 
+/* ✅ الفعاليات */
 .fc-event {
-    border-radius: 5px !important; /* لجعل الفعالية دائرية */
-    font-weight: bold;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    padding: 6px 10px !important;
+    font-family: 'Tajawal', sans-serif !important;
+    transition: background-color 0.3s ease-in-out !important;
     text-align: center;
 }
 
 .fc-event:hover {
-    background-color: #0056b3 !important; /* تغيير اللون عند التحويم */
-    color: white !important;
+    background-color: #bf6241 !important;
+    color: #fff !important;
 }
 
-
-
-/* تخصيص الشهور والأيام */
+/* 📆 العنوان الرئيسي */
 .fc-toolbar-title {
     font-family: 'Tajawal', sans-serif !important;
-    font-size: 20px !important;
-    color: #1e1b1b !important;
+    font-size: 24px !important;
+    color: #734c31 !important;
+    font-weight: 800;
 }
 
-
-.fc-toolbar-chunk {
-    gap: 20px !important;
+/* 🔘 أزرار الشهور والأسابيع */
+.fc-toolbar .fc-button {
+    background-color: #da7e59 !important;
+    color: #fff !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    border: none !important;
+    padding: 8px 16px !important;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.06);
 }
-
 
 .fc-toolbar .fc-button:hover {
-    background-color: #fc9d9d !important;
+    background-color: #b95d3d !important;
     color: #fff !important;
-
-    
 }
 
+/* ↔️ تباعد الأزرار */
+.fc-toolbar-chunk {
+    gap: 14px !important;
+}
 
-.fc-toolbar .fc-button {
-    background-color: #f85252 !important;
-    color: #fff !important;
-    font-size: 14px !important;
-    font-weight: bold !important;
-    border-radius: 4px solid #fff !important;
-    border: 10px solid #fff !important; /* الحدود البيضاء */
+/* 🧱 تثبيت حجم الخلية */
+.fc-daygrid-day-frame {
+    min-height: 100px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    padding-top: 10px !important;
+}
 
+/* 🧾 تنسيق الحدث داخل الخلية */
+.fc-event {
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+    line-height: 1.4 !important;
 }
 
 

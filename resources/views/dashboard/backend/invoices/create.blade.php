@@ -35,9 +35,9 @@
                 </div>
 
                 <div class="form-group">
-    <label for="invoice_Date">Reservation Date</label>
-    <input type="date" name="invoice_Date" id="invoice_Date" class="form-control" value="{{ request()->get('invoice_date') ?? old('invoice_Date') }}">
-    @error('invoice_Date')
+    <label for="due_date">Wedding Date</label>
+    <input type="date" name="due_date" id="due_date" class="form-control" value="{{ request()->get('due_date') ?? old('due_date') }}">
+    @error('due_date')
         <span class="text-danger">{{ $message }}</span>
     @enderror
 </div>
@@ -45,10 +45,10 @@
 
                 <div class="d-flex col-4 flex-column mb-7 fv-row fv-plugins-icon-container">
                     <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                        <span class="required">Wedding Date</span>
+                        <span class="required">Reservation Date</span>
                     </label>
-                    <input type="date" name="due_date" value="{{ old('due_date') }}" class="form-control form-control-solid" placeholder="Enter due_date" >
-                    @error('due_date') <span class="text-danger">{{ $message }}</span>  @enderror
+                    <input type="date" name="invoice_Date" value="{{ old('invoice_Date') }}" class="form-control form-control-solid" placeholder="Enter invoice_Date" >
+                    @error('invoice_Date') <span class="text-danger">{{ $message }}</span>  @enderror
                 </div>
 
             </div>
@@ -126,6 +126,63 @@
         @error('discount') <span class="text-danger">{{ $message }}</span>  @enderror
     </div>
 
+<hr>
+<h4>خيارات إضافية</h4>
+<div class="row">
+
+    {{-- ✅ 1. حجز الغرف --}}
+    <div class="col-md-4 mb-3">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="rooms_enabled" name="rooms_enabled">
+            <label class="form-check-label" for="enable_rooms">تفعيل حجز الغرف</label>
+        </div>
+        <input type="number" class="form-control mt-2" name="rooms_count" id="rooms_count" placeholder="عدد الغرف" disabled>
+        <input type="number" class="form-control mt-2" name="room_price" id="room_price" placeholder="سعر الغرفة" disabled>
+    </div>
+
+    {{-- ✅ 2. باكدج التصوير --}}
+    <div class="col-md-4 mb-3">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="photo_enabled" name="photo_enabled">
+            <label class="form-check-label" for="photo_enabled">تفعيل باكدج التصوير</label>
+        </div>
+        <input type="number" class="form-control mt-2" name="photo_price" id="photo_price" placeholder="سعر الباكدج" disabled>
+    </div>
+
+    {{-- ✅ 3. فقرات غنائية --}}
+    <div class="col-md-4 mb-3">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="songs_enabled" name="songs_enabled">
+            <label class="form-check-label" for="enable_singing">فقرات غنائية</label>
+        </div>
+        <input type="number" class="form-control mt-2" name="songs_count" id="songs_count" placeholder="عدد الفقرات" disabled>
+        <input type="number" class="form-control mt-2" name="song_price" id="song_price" placeholder="سعر الفقرة" disabled>
+    </div>
+
+    {{-- ✅ 4. سرفيس --}}
+    <div class="col-md-4 mb-3">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="service_enabled" name="service_enabled">
+            <label class="form-check-label" for="enable_service">تفعيل سرفيس</label>
+        </div>
+        <input type="number" class="form-control mt-2" name="service_price" id="service_price" placeholder="سعر السرفيس" disabled>
+    </div>
+
+    {{-- ✅ 5. خيار إضافي --}}
+    <div class="col-md-4 mb-3">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="extra_option_enabled" name="extra_option_enabled">
+            <label class="form-check-label" for="extra_option_enabled">تفعيل خيار إضافي</label>
+        </div>
+        <input type="text" class="form-control mt-2" name="extra_option_name" id="extra_option_name" placeholder="اسم الخيار" disabled>
+        <input type="number" class="form-control mt-2" name="extra_option_price	" id="extra_option_price" placeholder="سعر الخيار" disabled>
+    </div>
+
+</div>
+
+
+
+
 <div class="d-flex col-6 flex-column mb-7 fv-row fv-plugins-icon-container">
 <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
 <span class="required">الإجمالي</span>
@@ -164,17 +221,18 @@
                             <small class="errorTxt">{{ $message }}</small>
                         </span>
                     @enderror
+
+
+
+
+
                 </div>
+x
 
 
 
 
             </div>
-
-
-
-
-
 
 
             <div class="text-center pt-15">
@@ -265,6 +323,72 @@ function calculateTotal() {
             }
         });
     });
+</script>
+<script>
+    // تفعيل/تعطيل الحقول بناءً على الشيك بوكس
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggles = [
+            { checkbox: 'rooms_enabled', inputs: ['rooms_count', 'room_price'] },
+            { checkbox: 'photo_enabled', inputs: ['photo_enabled' , ['photo_price']] },
+            { checkbox: 'songs_enabled', inputs: ['songs_count', 'song_price'] },
+            { checkbox: 'service_enabled', inputs: ['service_price'] },
+            { checkbox: 'extra_option_enabled', inputs: ['extra_option_name', 'extra_option_price'] }
+        ];
+
+        toggles.forEach(({ checkbox, inputs }) => {
+            const cb = document.getElementById(checkbox);
+            cb.addEventListener('change', () => {
+                inputs.forEach(id => {
+                    const input = document.getElementById(id);
+                    input.disabled = !cb.checked;
+                    if (!cb.checked) input.value = '';
+                    calculateTotal();
+                });
+            });
+
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.addEventListener('input', calculateTotal);
+            });
+        });
+    });
+
+    // تحديث التوتال
+    function calculateTotal() {
+        const platePrice = parseFloat(document.getElementById('plate_price').value) || 0;
+        const numberOfPeople = parseInt(document.getElementById('number_of_people').value) || 0;
+        const discount = parseFloat(document.getElementById('Discount').value) || 0;
+
+        let total = platePrice * numberOfPeople;
+
+        if (document.getElementById('rooms_enabled').checked) {
+            const roomCount = parseInt(document.getElementById('rooms_count').value) || 0;
+            const roomPrice = parseFloat(document.getElementById('room_price').value) || 0;
+            total += roomCount * roomPrice;
+        }
+
+        if (document.getElementById('photo_enabled').checked) {
+            total += parseFloat(document.getElementById('photo_price').value) || 0;
+        }
+
+        if (document.getElementById('songs_enabled').checked) {
+            const singingCount = parseInt(document.getElementById('songs_count').value) || 0;
+            const singingPrice = parseFloat(document.getElementById('song_price').value) || 0;
+            total += singingCount * singingPrice;
+        }
+
+        if (document.getElementById('service_enabled').checked) {
+            total += parseFloat(document.getElementById('service_price').value) || 0;
+        }
+
+        if (document.getElementById('extra_option_enabled').checked) {
+            total += parseFloat(document.getElementById('extra_option_price').value) || 0;
+        }
+
+        total -= discount;
+
+        document.getElementById('Total').value = total.toFixed(2);
+    }
 </script>
 
 @endsection

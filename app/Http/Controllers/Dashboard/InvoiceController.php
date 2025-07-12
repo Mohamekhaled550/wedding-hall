@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
+
 class InvoiceController extends Controller
 {
 
@@ -47,12 +48,42 @@ class InvoiceController extends Controller
 
     public function store(InvoiceRequest $request)
     {
+        $alreadyBooked = Invoice::where('section_id', $request->section_id)
+    ->whereDate('due_date', $request->due_date)
+    ->exists();
+
+if ($alreadyBooked) {
+            return redirect(route('admin.invoices.index'))->with('error', 'هذه القاعة محجوزة بالفعل في هذا اليوم');
+
+}
+
         $data = $request->except('img');
         $data['Status'] = 'غير مدفوعه';
         $data['value_status'] = '2';
 
 
-        $invoice = Invoice::create($data);
+    // القيم الجديدة من الفورم (لو مش موجودة هترجع null أو 0)
+    $data['rooms_enabled']       = $request->has('rooms_enabled') ? 1 : 0;
+    $data['rooms_count']         = $request->rooms_count;
+    $data['room_price']         = $request->room_price;
+
+    $data['photo_enabled'] = $request->has('photo_enabled') ? 1 : 0;
+    $data['photo_price']  = $request->photo_price;
+
+    $data['songs_enabled']     = $request->has('songs_enabled') ? 1 : 0;
+    $data['songs_count']      = $request->songs_count;
+    $data['song_price']      = $request->song_price;
+
+    $data['service_enabled']     = $request->has('service_enabled') ? 1 : 0;
+    $data['service_price']      = $request->service_price;
+
+    $data['extra_option_enabled']       = $request->has('extra_option_enabled') ? 1 : 0;
+    $data['extra_option_name']         = $request->extra_option_name;
+    $data['extra_option_price']        = $request->extra_option_price;
+
+
+
+    $invoice = Invoice::create($data);
 
 
         $product_name = Product::where('id' , $request->product_id)->first()->name;
@@ -91,7 +122,6 @@ class InvoiceController extends Controller
             'user_id' =>  Auth::user()->id
         ]);
 
-        Mail::to(Auth::user()->email)->send(new AddedInvoice());
 
 
         return redirect(route('admin.invoices.index'))->with('success', 'Data Created Successfully');
@@ -293,16 +323,70 @@ class InvoiceController extends Controller
     }
 
 
-
-    public function calendar(Request $request)
+public function calendar(Request $request)
 {
-    $section = $request->section; // استلام قيمة القسم من الفورم
-
-    // جلب الفواتير مع الحقول المهمة
-    $invoices = Invoice::select('id', 'invoice_number', 'invoice_Date', 'due_date', 'value_status', 'Status' , 'section_id')->get();
+    $hall = $request->hall;
     $sections = Section::all();
+    $allDates = \Carbon\CarbonPeriod::create(now(), now()->addDays(180));
 
-    return view('dashboard.backend.invoices.calendar', compact('invoices','section'));
+    if ($hall == '1' || $hall == '2') {
+        $hallId = intval($hall);
+
+        // الفواتير الحالية للقاعـة المختارة فقط
+        $invoices = Invoice::where('section_id', $hallId)->get();
+
+        // نحسب الأيام المشغولة للقاعـة
+        $busyDates = $invoices->pluck('due_date')->unique()->toArray();
+
+        // نضيف الأيام المتاحة كـ أحداث إضافية
+        foreach ($allDates as $date) {
+            $dateStr = $date->format('Y-m-d');
+            if (!in_array($dateStr, $busyDates)) {
+                $invoices->push((object)[
+                    'id' => null,
+                    'invoice_number' => '',
+                    'invoice_Date' => $dateStr,
+                    'due_date' => $dateStr,
+                    'value_status' => 0,
+                    'Status' => 'متاح',
+                    'section_id' => null,
+                    'section' => (object)['name' => 'Hall ' . $hall . ' free']
+                ]);
+            }
+        }
+
+    } elseif ($hall == 'both') {
+        $busyDates = Invoice::select('due_date', 'section_id')->get()
+            ->groupBy('due_date')
+            ->map(fn($items) => $items->pluck('section_id')->toArray());
+
+        $availableDates = collect();
+        foreach ($allDates as $date) {
+            $dateStr = $date->format('Y-m-d');
+            $bookedSections = $busyDates[$dateStr] ?? [];
+            if (!in_array(1, $bookedSections) && !in_array(2, $bookedSections)) {
+                $availableDates->push($dateStr);
+            }
+        }
+
+        $invoices = $availableDates->map(function ($date) {
+            return (object)[
+                'id' => null,
+                'invoice_number' => '',
+                'invoice_Date' => $date,
+                'due_date' => $date,
+                'value_status' => 0,
+                'Status' => 'متاح',
+                'section_id' => null,
+                'section' => (object)['name' => 'All Free']
+            ];
+        });
+
+    } else {
+        $invoices = Invoice::select('id', 'invoice_number', 'invoice_Date', 'due_date', 'value_status', 'Status', 'section_id')->get();
+    }
+
+    return view('dashboard.backend.invoices.calendar', compact('invoices', 'hall', 'sections'));
 }
 
 

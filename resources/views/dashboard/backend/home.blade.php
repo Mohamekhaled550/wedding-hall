@@ -1,69 +1,106 @@
 @php
-    $sections = App\Models\Section::get();
-    $products = App\Models\Section::get();
-    $invoices = App\Models\Invoice::get();
-
+    use Carbon\Carbon;
+    $currentMonth = Carbon::now()->format('F');
+    $currentMonthInvoicesCount = App\Models\Invoice::whereMonth('due_date', Carbon::now()->month)->count();
 @endphp
 
 @extends('dashboard.layouts.master')
 
-
-@section('title')
- Home
-@endsection
-
+@section('title', 'Dashboard')
 
 @section('content')
 
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
 
+    .dashboard-wrapper {
+        background: linear-gradient(to right, #fef9f9, #f3f0ff);
+        padding: 40px 30px;
+        border-radius: 16px;
+    }
 
+    .dashboard-header {
+        font-size: 28px;
+        font-weight: 600;
+        color: #3d3d3d;
+        margin-bottom: 40px;
+    }
 
+    .card-metric {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+        padding: 25px 30px;
+        transition: all 0.3s ease-in-out;
+        height: 100%;
+    }
 
-        @php
-    use Carbon\Carbon;
+    .card-metric:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
 
-    // الحصول على اسم الشهر الحالي
-    $currentMonth = Carbon::now()->format('F'); // اسم الشهر بالإنجليزية
-    $currentMonthInvoicesCount = App\Models\Invoice::whereMonth('due_date', Carbon::now()->month)->count(); // عدد الفواتير في الشهر الحالي
-@endphp
+    .metric-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: #6c757d;
+    }
 
-<div class="row gx-5 gx-xl-8">
-    <div class="col-xxl-6 mb-5 mb-xl-8">
-        <a href="{{ route('admin.invoices.calendar') }}" class="card card-xxl-stretch bg-primary">
-            <div class="card-body d-flex flex-column justify-content-between">
-                <i class="ki-duotone ki-element-11 text-white fs-2hx ms-n1 flex-grow-1">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                    <span class="path3"></span>
-                    <span class="path4"></span>
-                </i>
-                <div class="d-flex flex-column">
-                    <!-- عرض اسم الشهر الحالي -->
-                    <div class="text-white fw-bold fs-1 mb-0 mt-5">{{ $currentMonth }}</div>
+    .metric-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: #343a40;
+    }
 
-                    <!-- عرض عدد الفواتير في الشهر الحالي -->
-                    <div class="text-white fw-semibold fs-6">{{ $currentMonthInvoicesCount }} Invoices</div>
+    .metric-icon {
+        font-size: 2rem;
+        color: #6f42c1;
+    }
+
+    .text-green { color: #2f9e44; }
+    .text-pink { color: #f06595; }
+    .text-purple { color: #7950f2; }
+
+    .grid-gap {
+        gap: 30px;
+    }
+</style>
+
+<div class="dashboard-wrapper">
+    <div class="dashboard-header text-center">
+        Welcome to <span class="text-purple">HAYAT Wedding Hall System </span>
+    </div>
+
+<div class="d-flex justify-content-center flex-wrap gap-4">
+
+        <div class="col">
+            <div class="card-metric text-center">
+                <a href="{{ route('admin.invoices.calendar') }}">
+                <div class="metric-icon mb-3">
+                    <i class="ki-duotone ki-calendar text-green"></i>
                 </div>
+                <div class="metric-value">{{ $currentMonthInvoicesCount }}</div>
+                <div class="metric-title">Invoices in {{ $currentMonth }}</div>
             </div>
+        </div>
+</a>
+        <div class="col">
+            <div class="card-metric text-center">
+                <a href="{{ route('admin.reports.home') }}">
+                <div class="metric-icon mb-3">
+                    <i class="ki-duotone ki-graph text-pink"></i>
+                </div>
+                <div class="metric-value">Reports</div>
+                <div class="metric-title">Monthly & Yearly Insights</div>
+            </div>
+        </div>
         </a>
+
+
+
     </div>
 </div>
-
-<div class="row gx-5 gx-xl-8">
-    <div class="col-xxl-6 mb-5 mb-xl-8">
-        <a href="{{ route('admin.reports.home') }}" class="card card-xxl-stretch bg-warning">
-            <div class="card-body d-flex flex-column justify-content-between">
-                <i class="ki-duotone ki-graph text-white fs-2hx ms-n1 flex-grow-1"><span class="path1"></span><span class="path2"></span></i>
-                <div class="d-flex flex-column">
-                    <div class="text-white fw-bold fs-1 mb-0 mt-5">Reports</div>
-                    <div class="text-white fw-semibold fs-6">View monthly and yearly reports</div>
-                </div>
-            </div>
-        </a>
-    </div>
-</div>
-
-
-
 
 @endsection
