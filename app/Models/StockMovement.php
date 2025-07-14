@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class StockMovement extends Model
 {
-    protected $fillable = [
-        'stock_id',
-        'movement_type',
+      protected $fillable = [
+        'ingredient_id',
+        'type',
         'quantity',
-        'description',
+        'source',
+        'invoice_id',
     ];
 
 
@@ -19,6 +20,11 @@ class StockMovement extends Model
 {
     return $this->belongsTo(Ingredient::class);
 }
+
+public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
 
 
 }

@@ -86,6 +86,20 @@ if ($alreadyBooked) {
     $invoice = Invoice::create($data);
 
 
+    $product = Product::with('ingredients')->find($request->product_id);
+
+foreach ($product->ingredients as $ingredient) {
+        $required_qty = $ingredient->pivot->quantity_per_plate * $request->number_of_people;
+
+        StockMovement::create([
+            'ingredient_id' => $ingredient->id,
+            'quantity' => $required_qty,
+            'movement_type' => 'out',
+            'note' => 'Auto consumption for invoice #' . $invoice->id,
+        ]);
+    }
+
+
         $product_name = Product::where('id' , $request->product_id)->first()->name;
         $section_name = Section::where('id' , $request->section_id)->first()->name;
         $invoice_id = Invoice::latest()->first()->id;
@@ -186,6 +200,18 @@ if ($alreadyBooked) {
     {
         $invoice = Invoice::where('id' , $id)->first();
         $invoice->delete();
+$movements = \App\Models\StockMovement::where('invoice_id', $invoice->id)->get();
+foreach ($movements as $movement) {
+    \App\Models\StockMovement::create([
+        'ingredient_id' => $movement->ingredient_id,
+        'type' => 'in',
+        'quantity' => $movement->quantity,
+        'invoice_id' => $invoice->id,
+        'source' => 'Revert: invoice #' . $invoice->invoice_number,
+    ]);
+    $movement->delete();
+}
+
         return redirect(route('admin.invoices.index'))->with('success', 'Added to archive');
     }
 

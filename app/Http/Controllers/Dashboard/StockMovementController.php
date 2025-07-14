@@ -3,15 +3,13 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Dashboard\HelperTrait;
 use Illuminate\Http\Request;
 use App\Models\StockMovement;
-
+use App\Models\Ingredient;
+use App\Models\Invoice;
 
 class StockMovementController extends Controller
 {
-    use HelperTrait ;
-
     public function __construct()
     {
         $this->middleware('permission:stock-movements-read')->only(['index']);
@@ -20,57 +18,69 @@ class StockMovementController extends Controller
         $this->middleware('permission:stock-movements-delete')->only(['destroy']);
     }
 
-
-      public function index()
+    public function index()
     {
-        $movements = StockMovement::with('ingredient')->latest()->get();
+        $movements = StockMovement::with(['ingredient', 'invoice'])->latest()->get();
         return view('dashboard.backend.stock_movements.index', compact('movements'));
     }
 
     public function create()
     {
-        return view('dashboard.backend.admins.create');
-
+        $ingredients = Ingredient::all();
+        $invoices = Invoice::all();
+        return view('dashboard.backend.stock_movements.create', compact('ingredients', 'invoices'));
     }
-
 
     public function store(Request $request)
     {
-        $data = $request->except('img');
-        $this->addImage($request, $data, 'img', 'admins');
-        return redirect(route('admin.admins.index'))->with('success', 'Data Created Successfully');
+        $request->validate([
+            'ingredient_id' => 'required|exists:ingredients,id',
+            'type' => 'required|in:in,out',
+            'quantity' => 'required|numeric|min:0.01',
+            'invoice_id' => 'nullable|exists:invoices,id',
+        ]);
 
+        $movement = new StockMovement();
+        $movement->ingredient_id = $request->ingredient_id;
+        $movement->type = $request->type;
+        $movement->quantity = $request->quantity;
+        $movement->invoice_id = $request->invoice_id;
+        $movement->save();
+
+        return redirect()->route('admin.stock-movements.index')->with('success', 'تم تسجيل الحركة بنجاح.');
     }
 
-
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $movement = StockMovement::findOrFail($id);
+        $ingredients = Ingredient::all();
+        $invoices = Invoice::all();
+        return view('dashboard.backend.stock-movements.edit', compact('movement', 'ingredients', 'invoices'));
     }
 
-
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        $admin = User::where('id' , $id)->first();
-        return view('dashboard.backend.admins.edit' , compact('admin'));
+        $request->validate([
+            'ingredient_id' => 'required|exists:ingredients,id',
+            'type' => 'required|in:in,out',
+            'quantity' => 'required|numeric|min:0.01',
+            'invoice_id' => 'nullable|exists:invoices,id',
+        ]);
+
+        $movement = StockMovement::findOrFail($id);
+        $movement->ingredient_id = $request->ingredient_id;
+        $movement->type = $request->type;
+        $movement->quantity = $request->quantity;
+        $movement->invoice_id = $request->invoice_id;
+        $movement->save();
+
+        return redirect()->route('admin.stock-movements.index')->with('success', 'تم تعديل بيانات الحركة بنجاح.');
     }
 
-
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-
-        $admin = User::where('id' , $id)->first();
-        $data = $request->except('img');
-        $this->updateImg($request, $data, 'img', 'admins' , $admin);
-        $admin->update($data);
-        return redirect(route('admin.admins.index'))->with('success', 'Data Created Successfully');
-
-    }
-
-
-    public function destroy(string $id)
-    {
-        $admin = User::where('id' , $id)->delete();
-        return redirect(route('admin.admins.index'))->with('success', 'Data Deleted Successfully');
+        $movement = StockMovement::findOrFail($id);
+        $movement->delete();
+        return redirect()->route('admin.stock-movements.index')->with('success', 'تم حذف الحركة.');
     }
 }

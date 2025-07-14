@@ -35,4 +35,9 @@ public function invoiceDetails()
     return $this->hasMany(InvoicesDetails::class);
 }
 
+ public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
+    }
+
 }

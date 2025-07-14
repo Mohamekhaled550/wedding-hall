@@ -6,14 +6,15 @@
 <div class="container">
     <h1 class="text-2xl font-bold mb-4">Add Stock Movement</h1>
 
-    <form action="{{ route('admin.stock_movements.store') }}" method="POST">
+    <form action="{{ route('admin.stock-movements.store') }}" method="POST">
         @csrf
 
         <div class="mb-3">
             <label>Ingredient</label>
-            <select name="ingredient_id" class="form-control">
+            <select name="ingredient_id" class="form-control" required>
+                <option disabled selected>-- Select Ingredient --</option>
                 @foreach($ingredients as $ingredient)
-                <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                    <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -24,19 +25,19 @@
         </div>
 
         <div class="mb-3">
-            <label>Movement Type</label>
-            <select name="movement_type" class="form-control">
-                <option value="in">In</option>
-                <option value="out">Out</option>
+            <label>Type</label>
+            <select name="type" class="form-control" required>
+                <option value="in">In (Add)</option>
+                <option value="out">Out (Deduct)</option>
             </select>
         </div>
 
         <div class="mb-3">
-            <label>Note</label>
-            <textarea name="note" class="form-control"></textarea>
+            <label>Source / Note</label>
+            <textarea name="source" class="form-control"></textarea>
         </div>
 
-        <button class="btn btn-primary">Save</button>
+        <button class="btn btn-primary">Add Movement</button>
     </form>
 </div>
 @endsection

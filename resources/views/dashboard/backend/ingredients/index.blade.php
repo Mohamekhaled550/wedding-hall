@@ -1,4 +1,3 @@
-{{-- resources/views/dashboard/ingredients/index.blade.php --}}
 @extends('dashboard.layouts.master')
 
 @section('title', 'Ingredients')
@@ -17,27 +16,33 @@
                 <th>Unit</th>
                 <th>Current Stock</th>
                 <th>Unit Price</th>
+                <th>Category</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($ingredients as $ingredient)
-            <tr>
-                <td>{{ $ingredient->id }}</td>
-                <td>{{ $ingredient->name }}</td>
-                <td>{{ $ingredient->unit }}</td>
-                <td>{{ $ingredient->current_stock }}</td>
-                <td>{{ $ingredient->unit_price }}</td>
-                <td>
-                    <a href="{{ route('admin.ingredients.edit', $ingredient->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <form action="{{ route('admin.ingredients.destroy', $ingredient->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
+            @forelse($ingredients as $ingredient)
+                <tr>
+                    <td>{{ $ingredient->id }}</td>
+                    <td>{{ $ingredient->name }}</td>
+                    <td>{{ $ingredient->unit }}</td>
+                    <td>{{ $ingredient->current_stock }}</td>
+                    <td>{{ number_format($ingredient->unit_price, 2) }}</td>
+                    <td>{{ $ingredient->category?->name ?? '-' }}</td>
+                    <td>
+                        <a href="{{ route('admin.ingredients.edit', $ingredient->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('admin.ingredients.destroy', $ingredient->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center">No ingredients found.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

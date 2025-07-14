@@ -36,22 +36,25 @@ class IngredientController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string',
             'unit' => 'required|string',
-            'current_stock' => 'nullable|numeric',
             'unit_price' => 'nullable|numeric',
             'category_id' => 'required|exists:categories,id',
 
         ]);
 
-        Ingredient::create($request->all());
-        return redirect()->route('admin.ingredients.index')->with('success', 'Ingredient added successfully!');
+Ingredient::create([
+  'name' => $request->name,
+  'unit' => $request->unit,
+  'unit_price' => $request->unit_price,
+  'category_id' => $request->category_id,
+]);        return redirect()->route('admin.ingredients.index')->with('success', 'Ingredient added successfully!');
     }
 
     public function edit(Ingredient $ingredient)
     {
-  $ingredient = \App\Models\Ingredient::findOrFail($id);
     $categories = \App\Models\Category::all(); // ✅ هات كل الأقسام
         return view('dashboard.backend.ingredients.edit', compact('ingredient','categories'));
     }
@@ -61,7 +64,6 @@ class IngredientController extends Controller
         $request->validate([
             'name' => 'required|string',
             'unit' => 'required|string',
-            'current_stock' => 'nullable|numeric',
             'unit_price' => 'nullable|numeric',
             'category_id' => 'required|exists:categories,id',
 

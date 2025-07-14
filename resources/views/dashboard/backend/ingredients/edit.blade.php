@@ -1,4 +1,3 @@
-{{-- resources/views/dashboard/ingredients/edit.blade.php --}}
 @extends('dashboard.layouts.master')
 
 @section('title', 'Edit Ingredient')
@@ -13,22 +12,31 @@
 
         <div class="mb-3">
             <label>Name</label>
-            <input type="text" name="name" class="form-control" value="{{ $ingredient->name }}" required>
+            <input type="text" name="name" class="form-control" value="{{ old('name', $ingredient->name) }}" required>
         </div>
 
         <div class="mb-3">
             <label>Unit</label>
-            <input type="text" name="unit" class="form-control" value="{{ $ingredient->unit }}">
+            <input type="text" name="unit" class="form-control" value="{{ old('unit', $ingredient->unit) }}">
         </div>
 
-        <div class="mb-3">
-            <label>Current Stock</label>
-            <input type="number" name="current_stock" class="form-control" step="0.01" value="{{ $ingredient->current_stock }}">
-        </div>
 
         <div class="mb-3">
             <label>Unit Price</label>
-            <input type="number" name="unit_price" class="form-control" step="0.01" value="{{ $ingredient->unit_price }}">
+            <input type="number" name="unit_price" class="form-control" step="0.01" value="{{ old('unit_price', $ingredient->unit_price) }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="category_id" class="form-label">Category</label>
+            <select name="category_id" class="form-control" required>
+                <option value="">-- اختر القسم --</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}"
+                        {{ old('category_id', $ingredient->category_id) == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <button class="btn btn-primary">Update</button>

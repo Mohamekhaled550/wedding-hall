@@ -179,6 +179,30 @@
                                                 @endif
                                             </div>
                                         </div>
+                                        @if($invoice->stockMovements->count())
+    <h4>حركات المخزون:</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>المكون</th>
+                <th>الكمية</th>
+                <th>النوع</th>
+                <th>المصدر</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($invoice->stockMovements as $movement)
+                <tr>
+                    <td>{{ $movement->ingredient->name }}</td>
+                    <td>{{ $movement->quantity }}</td>
+                    <td>{{ $movement->type }}</td>
+                    <td>{{ $movement->source }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endif
+
 
                                     </div>
                                 </div>

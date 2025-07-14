@@ -10,29 +10,45 @@
         @csrf
 
         <div class="mb-3">
-            <label>Product</label>
-            <select name="product_id" class="form-control">
+            <label for="product_id" class="form-label">Product</label>
+            <select name="product_id" id="product_id" class="form-control" required>
+                <option value="">-- Select Product --</option>
                 @foreach($products as $product)
-                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                    <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
+                        {{ $product->name }}
+                    </option>
                 @endforeach
             </select>
+            @error('product_id')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="mb-3">
-            <label>Ingredient</label>
-            <select name="ingredient_id" class="form-control">
+            <label for="ingredient_id" class="form-label">Ingredient</label>
+            <select name="ingredient_id" id="ingredient_id" class="form-control" required>
+                <option value="">-- Select Ingredient --</option>
                 @foreach($ingredients as $ingredient)
-                <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                    <option value="{{ $ingredient->id }}" {{ old('ingredient_id') == $ingredient->id ? 'selected' : '' }}>
+                        {{ $ingredient->name }}
+                    </option>
                 @endforeach
             </select>
+            @error('ingredient_id')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="mb-3">
-            <label>Quantity per Plate</label>
-            <input type="number" name="quantity_per_plate" class="form-control" step="0.01" required>
+            <label for="quantity_per_plate" class="form-label">Quantity per Plate</label>
+            <input type="number" name="quantity_per_plate" id="quantity_per_plate"
+                   class="form-control" step="0.01" min="0" value="{{ old('quantity_per_plate') }}" required>
+            @error('quantity_per_plate')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
-        <button class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>
 @endsection

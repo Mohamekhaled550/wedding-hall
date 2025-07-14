@@ -48,6 +48,7 @@ class ProductController extends Controller
         // حفظ العلاقة في الجدول الوسيط إذا كان هناك سكاشن مختارة
         if ($request->has('section_id')) {
             $product->sections()->sync($request->section_id);
+
         }
 
         return redirect(route('admin.products.index'))->with('success', 'Data Created Successfully');
