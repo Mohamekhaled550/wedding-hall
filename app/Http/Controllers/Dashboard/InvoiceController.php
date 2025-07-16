@@ -7,6 +7,8 @@ use App\Http\Controllers\Dashboard\EmailController;
 use App\Http\Requests\InvoiceRequest;
 use App\Mail\AddedInvoice;
 use App\Models\Invoice;
+use App\Models\Ingredient;
+use App\Models\StockMovement;
 use App\Models\InvoicesAttachments;
 use App\Models\InvoicesDetails;
 use App\Models\Notification;
