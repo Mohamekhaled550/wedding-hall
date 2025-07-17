@@ -16,6 +16,7 @@ class StockMovementController extends Controller
         $this->middleware('permission:stock-movements-create')->only(['create', 'store']);
         $this->middleware('permission:stock-movements-update')->only(['edit', 'update']);
         $this->middleware('permission:stock-movements-delete')->only(['destroy']);
+
     }
 
     public function index()
@@ -83,4 +84,25 @@ class StockMovementController extends Controller
         $movement->delete();
         return redirect()->route('admin.stock-movements.index')->with('success', 'تم حذف الحركة.');
     }
+
+public function report(Request $request)
+{
+    $movements = StockMovement::with('ingredient')
+        ->when($request->ingredient_id, fn($q) => $q->where('ingredient_id', $request->ingredient_id))
+        ->when($request->type, fn($q) => $q->where('movement_type', $request->movement_type))
+        ->when($request->from, fn($q) => $q->whereDate('created_at', '>=', $request->from))
+        ->when($request->to, fn($q) => $q->whereDate('created_at', '<=', $request->to))
+        ->latest()
+        ->get();
+
+    $ingredients = Ingredient::all();
+
+    // Total
+    $total_in = $movements->where('type', 'in')->sum('quantity');
+    $total_out = $movements->where('type', 'out')->sum('quantity');
+
+    return view('dashboard.backend.stock_movements.report', compact('movements', 'ingredients', 'total_in', 'total_out'));
+}
+
+
 }

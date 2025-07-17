@@ -65,7 +65,7 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::resource('ingredients', \App\Http\Controllers\Dashboard\IngredientController::class);
         Route::resource('product-ingredients', \App\Http\Controllers\Dashboard\ProductIngredientController::class);
         Route::resource('stocks', \App\Http\Controllers\Dashboard\StockController::class);
-        Route::resource('stock-movements', \App\Http\Controllers\Dashboard\StockMovementController::class);
+        Route::resource('stock-movements', \App\Http\Controllers\Dashboard\StockMovementController::class)->except(['show']);
         Route::resource('categories', CategoryController::class);
 
 
@@ -102,6 +102,8 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::get('reports'                                   , [InvoiceReportController::class, 'index'])->name('reports.index');
         Route::post('reports/search'                           , [InvoiceReportController::class, 'search'])->name('reports.search');
         Route::put('/invoices/update-paid/{id}', [InvoicesDetailsController::class, 'updatePaidAmount'])->name('invoices.updatePaidAmount');
+        Route::get('stock-movements/report', [StockMovementController::class, 'report'])->name('stock-movements.report');
+        Route::get('/accountant/dashboard', [\App\Http\Controllers\Dashboard\AccountantController::class, 'index'])->name('accountant.dashboard');
 
 
 

@@ -96,7 +96,7 @@ foreach ($product->ingredients as $ingredient) {
         StockMovement::create([
             'ingredient_id' => $ingredient->id,
             'quantity' => $required_qty,
-            'movement_type' => 'out',
+            'type' => 'out',
             'note' => 'Auto consumption for invoice #' . $invoice->id,
         ]);
     }
