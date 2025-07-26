@@ -25,6 +25,39 @@
         <form action="{{ route('admin.invoices.store') }}" autocomplete="off" method="POST" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
             @csrf
 
+{{-- ✅ بيانات العميل --}}
+<div class="row">
+    {{-- اسم العميل --}}
+    <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">اسم العميل <span class="text-danger">*</span></label>
+        <input type="text" name="customer_name" class="form-control form-control-solid" placeholder="ادخل اسم العميل" required>
+        @error('customer_name') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+
+    {{-- ايميل العميل --}}
+    <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">البريد الإلكتروني</label>
+        <input type="email" name="customer_email" class="form-control form-control-solid" placeholder="ادخل البريد إن وجد">
+        @error('customer_email') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+
+    {{-- رقم هاتف العميل --}}
+    <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">رقم الهاتف</label>
+        <input type="text" name="customer_phone" class="form-control form-control-solid" placeholder="ادخل رقم الهاتف">
+        @error('customer_phone') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+
+    {{-- عنوان العميل --}}
+    <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">العنوان</label>
+        <input type="text" name="customer_address" class="form-control form-control-solid" placeholder="ادخل عنوان العميل">
+        @error('customer_address') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+</div>
+
+
+
             <div class="row">
                 <div class="d-flex col-4 flex-column mb-7 fv-row fv-plugins-icon-container">
                     <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">

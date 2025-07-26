@@ -40,4 +40,10 @@ public function invoiceDetails()
         return $this->hasMany(StockMovement::class);
     }
 
+
+    public function customer()
+{
+    return $this->belongsTo(Customer::class);
+}
+
 }

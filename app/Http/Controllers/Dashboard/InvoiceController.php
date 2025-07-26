@@ -12,6 +12,8 @@ use App\Models\StockMovement;
 use App\Models\InvoicesAttachments;
 use App\Models\InvoicesDetails;
 use App\Models\Notification;
+use App\Models\Customer;
+use App\Models\Expense;
 use App\Models\Product;
 use App\Models\Section;
 use App\Notifications\AddInvoice;
@@ -58,10 +60,19 @@ if ($alreadyBooked) {
             return redirect(route('admin.invoices.index'))->with('error', 'هذه القاعة محجوزة بالفعل في هذا اليوم');
 
 }
+   // احفظ بيانات العميل أولًا
+    $customer = Customer::create([
+        'name'    => $request->customer_name,
+        'email'   => $request->customer_email,
+        'phone'   => $request->customer_phone,
+        'address' => $request->customer_address,
+    ]);
 
-        $data = $request->except('img');
+
+    $data = $request->except(['img', 'customer_name', 'customer_email', 'customer_phone', 'customer_address']);
         $data['Status'] = 'غير مدفوعه';
         $data['value_status'] = '2';
+        $data['customer_id'] = $customer->id;
 
 
     // القيم الجديدة من الفورم (لو مش موجودة هترجع null أو 0)

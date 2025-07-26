@@ -14,10 +14,15 @@ use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\InvoiceReportController;
 use App\Http\Controllers\Dashboard\StockController;
+use App\Http\Controllers\Dashboard\AccountantController;
 use App\Http\Controllers\Dashboard\StockMovementController;
 use App\Http\Controllers\Dashboard\ProductIngredientController;
 use App\Http\Controllers\Dashboard\IngredientController;
 use App\Http\Controllers\Dashboard\CategoryController;
+use App\Http\Controllers\Dashboard\PermissionController;
+use App\Http\Controllers\Dashboard\CustomerController;
+use App\Http\Controllers\Dashboard\ExpenseController;
+
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
 
@@ -67,6 +72,9 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::resource('stocks', \App\Http\Controllers\Dashboard\StockController::class);
         Route::resource('stock-movements', \App\Http\Controllers\Dashboard\StockMovementController::class)->except(['show']);
         Route::resource('categories', CategoryController::class);
+        Route::resource('permissions',PermissionController::class);
+        Route::resource('customers', \App\Http\Controllers\Dashboard\CustomerController::class);
+        Route::resource('expenses', \App\Http\Controllers\Dashboard\ExpenseController::class);
 
 
         Route::get('send-email'   , [EmailController::class , 'send']);
@@ -103,7 +111,7 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::post('reports/search'                           , [InvoiceReportController::class, 'search'])->name('reports.search');
         Route::put('/invoices/update-paid/{id}', [InvoicesDetailsController::class, 'updatePaidAmount'])->name('invoices.updatePaidAmount');
         Route::get('stock-movements/report', [StockMovementController::class, 'report'])->name('stock-movements.report');
-        Route::get('/accountant/dashboard', [\App\Http\Controllers\Dashboard\AccountantController::class, 'index'])->name('accountant.dashboard');
+Route::get('/accountant/dashboard', [AccountantController::class, 'index'])->name('accountant.dashboard');
 
 
 

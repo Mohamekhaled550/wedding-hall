@@ -25,7 +25,7 @@ class AccountantController extends Controller
 
         $latestInvoices = Invoice::with('customer')->latest()->take(5)->get();
 
-        return view('dashboard.backend.accountant.index', compact(
+        return view('dashboard.backend.accountant.home', compact(
             'totalRevenue',
             'totalExpenses',
             'profit',

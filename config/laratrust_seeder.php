@@ -29,6 +29,7 @@ return [
         ],
         'admin' => [],
         'user' => [],
+        'accountant' => [],
 
     ],
 

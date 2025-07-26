@@ -15,8 +15,8 @@ class AuthController extends Controller
 
 
     public function login(LoginRequest $request){
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password , 'type' => 'admin'])) {
-            return redirect()->route('admin.home');
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password ])) {
+return $this->authenticated($request, Auth::user());
         }else{
             return redirect()->back();
         }
@@ -27,7 +27,19 @@ class AuthController extends Controller
         Auth::logout();
         return redirect()->route('login');
     }
-    
+
+    protected function authenticated(Request $request, $user)
+{
+    if ($user->hasRole('Accountant')) {
+        return redirect()->route('admin.accountant.dashboard');
+    } elseif ($user->hasRole('superadmin')) {
+        return redirect()->route('admin.home');
+    }
+
+    return redirect('/'); // default
 }
 
- 
+
+}
+
+
