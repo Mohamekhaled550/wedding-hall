@@ -70,7 +70,7 @@
 
 <div class="dashboard-wrapper">
     <div class="dashboard-header text-center">
-        Welcome to <span class="text-purple">HAYAT Wedding Hall System </span>
+        Welcome to <span class="text-purple">Wedding Hall System </span>
     </div>
 
 <div class="d-flex justify-content-center flex-wrap gap-4">

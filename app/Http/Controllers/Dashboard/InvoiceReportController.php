@@ -6,10 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Invoice;
 use App\Models\Section;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class InvoiceReportController extends Controller
 {
+       public function __construct()
+    {
+        $this->middleware('permission:reports-read')->only(['reportshome']);
+        $this->middleware('permission:reports-create')->only(['create', 'store']);
+        $this->middleware('permission:reports-update')->only(['edit', 'update']);
+        $this->middleware('permission:reports-delete')->only(['destroy']);
+    }
+
+
+
     public function reportshome()
     {
         return view('dashboard.backend.reports.home');
