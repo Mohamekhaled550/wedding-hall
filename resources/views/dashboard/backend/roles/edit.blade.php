@@ -67,44 +67,31 @@
 
                                 </tr>
                             </thead>
-                            <tbody class="list form-check-all">
+                              <tbody>
+        @foreach ($permissions->groupBy(function($perm) {
+            return explode('-', $perm->name)[0]; // بتج grouping حسب أول جزء في الاسم
+        }) as $model => $modelPermissions)
+            <tr>
+                <td>{{ ucfirst($model) }}</td>
+                <td>
+                    @foreach ($modelPermissions as $permission)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="permissions[]"
+                                   value="{{ $permission->id }}"
+                                   id="perm_{{ $permission->id }}"
+                                   {{ isset($role) && $role->hasPermission($permission->name) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="perm_{{ $permission->id }}">
+                                {{ __(explode('-', $permission->name)[1] ?? $permission->name) }}
+                            </label>
+                        </div>
+                    @endforeach
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
 
-                                @foreach (config('laratrust_seeder.roles_structure.superadmin') as $model=>$permissions)
-
-                                    <tr>
-                                        <th scope="row">
-                                        </th>
-
-                                        <td>{{__('models.'. $model)}}</td>
-
-                                        <td>
-                                            <div class="permissions">
-
-
-                                            @foreach (explode(',' ,$permissions) as $permission)
-
-
-                                            <input type="checkbox" value="{{$model}}-{{config('laratrust_seeder.permissions_map')[$permission]}}" name="permissions[]"  class="{{$model}}" {{ $role->hasPermission($model . '-' . config('laratrust_seeder.permissions_map')[$permission]) ? 'checked':''}}>
-                                            <label>{{__('models.' . $permission)}}</label>
-
-
-                                            @endforeach
-
-                                            </div>
-                                        </td>
-
-
-
-
-
-
-
-                                    </tr>
-
-                                @endforeach
-
-
-                            </tbody>
                         </table>
 
                     </div>

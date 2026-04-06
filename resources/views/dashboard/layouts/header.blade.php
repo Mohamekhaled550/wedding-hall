@@ -10,7 +10,7 @@
 
             <a href="{{ route('admin.home') }}" class="d-flex align-items-center text-decoration-none">
                 <img src="{{ asset('dashboard/assets/media/logos/logo-hayat-40px.png') }}" class="h-35px me-2" alt="logo"/>
-                <span class="fs-4 fw-bold" style="color: #b07556;">Hayat Halls</span>
+                <span class="fs-4 fw-bold" style="color: #b07556;"></span>
             </a>
         </div>
 

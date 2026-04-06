@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RoleRequest;
 use App\Models\Role;
+use App\Models\Permission;
 use App\Repositories\Sql\RoleRepository;
 use App\Repositories\Sql\StockRepository;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class RoleController extends Controller
         $this->middleware('permission:roles-delete')->only(['destroy']);
     }
 
-   
+
 
     public function index()
     {
@@ -33,11 +34,12 @@ class RoleController extends Controller
     }
 
 
-    public function create()
-    {
-      
-        return view('dashboard.backend.roles.create');
-    }
+   public function create()
+{
+    $permissions = Permission::all();
+    return view('dashboard.backend.roles.create', compact('permissions'));
+}
+
 
 
     public function store(Request $request)
@@ -52,23 +54,21 @@ class RoleController extends Controller
 
     }
 
-    public function edit($id)
-    {
-        $role  =  Role::where('id' , $id)->first();
-        return view('dashboard.backend.roles.edit' , compact('role'));
+  public function edit($id)
+{
+    $role = Role::findOrFail($id);
+    $permissions = Permission::all();
+    return view('dashboard.backend.roles.edit', compact('role', 'permissions'));
+}
 
-    }
 
+  public function update(Request $request, $id)
+{
+    $role = Role::findOrFail($id);
+    $role->name = $request->name;
+    $role->save();
 
-    public function update(Request $request, $id)
-    {
-        $role  =  Role::where('id' , $id)->first();
-        $data = $request->only('name');
-        $role->update($data);
-        if(isset($request->permissions)){
-            $role->syncPermissions($request->permissions);
-        }
-
+    $role->permissions()->sync($request->permissions);
 
         return redirect(route('admin.roles.index'))->with('success', 'تم التعديل بنجاح');
 

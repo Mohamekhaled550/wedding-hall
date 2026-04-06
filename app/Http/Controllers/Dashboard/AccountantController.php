@@ -23,7 +23,7 @@ class AccountantController extends Controller
         $expenseCategories = ['Salaries', 'Purchases', 'Other'];
         $expenseData = [20000, 15000, 5000];
 
-        $latestInvoices = Invoice::with('customer')->latest()->take(5)->get();
+        $latestInvoices = Invoice::with('customer')->latest()->take(10)->get();
 
         return view('dashboard.backend.accountant.home', compact(
             'totalRevenue',
