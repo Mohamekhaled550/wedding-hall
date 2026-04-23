@@ -289,10 +289,13 @@
                         <a class="nav-link" href="{{ route('frontend.about') }}">من نحن</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('frontend.calendar') }}">الكالندر</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('frontend.contact') }}">اتصل بنا</a>
                     </li>
                 </ul>
-                <a href="{{ route('login') }}" class="btn btn-primary-custom">
+                <a href="{{ route('admin.login.redirect', ['redirect' => 'frontend']) }}" class="btn btn-primary-custom">
                     <i class="bi bi-person-circle"></i> تسجيل الدخول
                 </a>
             </div>
@@ -332,6 +335,7 @@
                     <ul class="list-unstyled">
                         <li><a href="{{ route('frontend.home') }}" class="footer-link">الرئيسية</a></li>
                         <li><a href="{{ route('frontend.services') }}" class="footer-link">خدماتنا</a></li>
+                        <li><a href="{{ route('frontend.calendar') }}" class="footer-link">الكالندر</a></li>
                         <li><a href="{{ route('frontend.gallery') }}" class="footer-link">معرض الصور</a></li>
                         <li><a href="{{ route('frontend.contact') }}" class="footer-link">اتصل بنا</a></li>
                     </ul>

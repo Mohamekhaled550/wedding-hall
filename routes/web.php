@@ -42,6 +42,7 @@ Route::get('/', [\App\Http\Controllers\Frontend\HomeController::class, 'index'])
 
 // Admin login
 Route::get('/admin/login', [AuthController::class , 'show_login'])->name('login');
+Route::get('/admin/login/{redirect?}', [AuthController::class , 'show_login'])->name('admin.login.redirect');
 Route::post('login-post'        , [AuthController::class , 'login'])->name('login.post');
 Route::get('/logout'            , [AuthController::class , 'logout'])->name('logout');
 Route::get('reset-password'     , [AdminController::class , 'resetPassword'])->name('reset-password');
@@ -131,3 +132,5 @@ Route::get('/services', [\App\Http\Controllers\Frontend\HomeController::class, '
 Route::get('/gallery', [\App\Http\Controllers\Frontend\HomeController::class, 'gallery'])->name('frontend.gallery');
 Route::get('/contact', [\App\Http\Controllers\Frontend\HomeController::class, 'contact'])->name('frontend.contact');
 Route::get('/about', [\App\Http\Controllers\Frontend\HomeController::class, 'about'])->name('frontend.about');
+
+Route::get('/calendar', [\App\Http\Controllers\Frontend\HomeController::class, 'calendar'])->name('frontend.calendar');

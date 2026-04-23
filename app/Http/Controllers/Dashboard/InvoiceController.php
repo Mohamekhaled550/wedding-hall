@@ -56,24 +56,13 @@ class InvoiceController extends Controller
     ->whereDate('due_date', $request->due_date)
     ->exists();
 
-if ($alreadyBooked) {
+        if ($alreadyBooked) {
             return redirect(route('admin.invoices.index'))->with('error', 'هذه القاعة محجوزة بالفعل في هذا اليوم');
+        }
 
-}
-   // احفظ بيانات العميل أولًا
-    $customer = Customer::create([
-        'name'    => $request->customer_name,
-        'email'   => $request->customer_email,
-        'phone'   => $request->customer_phone,
-        'address' => $request->customer_address,
-    ]);
-
-
-    $data = $request->except(['img', 'customer_name', 'customer_email', 'customer_phone', 'customer_address']);
+        $data = $request->except(['img', 'customer_name', 'customer_email', 'customer_phone', 'customer_address']);
         $data['Status'] = 'غير مدفوعه';
         $data['value_status'] = '2';
-        $data['customer_id'] = $customer->id;
-
 
     // القيم الجديدة من الفورم (لو مش موجودة هترجع null أو 0)
     $data['rooms_enabled']       = $request->has('rooms_enabled') ? 1 : 0;
@@ -95,11 +84,7 @@ if ($alreadyBooked) {
     $data['extra_option_price']        = $request->extra_option_price;
 
 
-
-    $invoice = Invoice::create($data);
-
-
-    $product = Product::with('ingredients')->find($request->product_id);
+        $product = Product::with('ingredients')->findOrFail($request->product_id);
 
     $lowStockIngredients = [];
 
@@ -120,38 +105,41 @@ if ($alreadyBooked) {
 
     // إذا كان هناك أصناف غير متوفرة، نعرض رسالة تحذير
     if (!empty($lowStockIngredients)) {
-        $warningMessage = 'تحذير: المخزون غير كافٍ للأصناف التالية:<br>';
+            $warningMessage = 'تحذير: المخزون غير كافٍ للأصناف التالية:<br>';
         foreach ($lowStockIngredients as $item) {
-            $warningMessage .= "- {$item['name']}:需要的 {$item['required']} {$item['unit']} (المتاح: {$item['available']} {$item['unit']})<br>";
+            $warningMessage .= "- {$item['name']}: المطلوب {$item['required']} {$item['unit']} (المتاح: {$item['available']} {$item['unit']})<br>";
         }
-
-        // إنشاء إشعار للمخزون المنخفض
-        Notification::create([
-            'title' => 'تحذير: مخزون غير كافٍ للفاتورة #' . $invoice->invoice_number,
-            'invoice_id' => $invoice->id,
-            'user_id' => Auth::user()->id
-        ]);
 
         return redirect()->route('admin.invoices.index')
             ->with('warning', $warningMessage);
     }
 
-    // إذا كان المخزون كافياً، يتم السحب
-    foreach ($product->ingredients as $ingredient) {
-        $required_qty = $ingredient->pivot->quantity_per_plate * $request->number_of_people;
+        DB::transaction(function () use ($request, $data, $product) {
+            $customer = Customer::create([
+                'name'    => $request->customer_name,
+                'email'   => $request->customer_email,
+                'phone'   => $request->customer_phone,
+                'address' => $request->customer_address,
+            ]);
 
-        StockMovement::create([
-            'ingredient_id' => $ingredient->id,
-            'quantity' => $required_qty,
-            'type' => 'out',
-            'note' => 'Auto consumption for invoice #' . $invoice->id,
-        ]);
-    }
+            $data['customer_id'] = $customer->id;
+            $invoice = Invoice::create($data);
 
+            foreach ($product->ingredients as $ingredient) {
+                $required_qty = $ingredient->pivot->quantity_per_plate * $request->number_of_people;
 
-        $product_name = Product::where('id' , $request->product_id)->first()->name;
-        $section_name = Section::where('id' , $request->section_id)->first()->name;
-        $invoice_id = Invoice::latest()->first()->id;
+                StockMovement::create([
+                    'ingredient_id' => $ingredient->id,
+                    'quantity' => $required_qty,
+                    'type' => 'out',
+                    'invoice_id' => $invoice->id,
+                    'source' => 'Auto consumption for invoice #' . $invoice->id,
+                ]);
+            }
+
+            $product_name = Product::where('id' , $request->product_id)->first()->name;
+            $section_name = Section::where('id' , $request->section_id)->first()->name;
+            $invoice_id = $invoice->id;
 
         InvoicesDetails::create([
             'invoice_id' => $invoice_id,
@@ -166,24 +154,25 @@ if ($alreadyBooked) {
         ]);
 
 
-        if ($request->hasFile('img')) {
-            foreach ($request->file('img') as $file) {
-                $data = $file->store('invoices' . '/' . $request->invoice_number);
-                InvoicesAttachments::create([
-                    'invoice_id' => $invoice_id,
-                    'invoice_number' => $request->invoice_number,
-                    'Created_by' => (Auth::user()->name),
-                    'file_name' => $data,
-                ]);
+            if ($request->hasFile('img')) {
+                foreach ($request->file('img') as $file) {
+                    $data = $file->store('invoices' . '/' . $request->invoice_number);
+                    InvoicesAttachments::create([
+                        'invoice_id' => $invoice_id,
+                        'invoice_number' => $request->invoice_number,
+                        'Created_by' => (Auth::user()->name),
+                        'file_name' => $data,
+                    ]);
+                }
             }
-        }
 
-        Notification::create([
+            Notification::create([
 
-            'title' => 'تم اصافه فاتوره جديده ' . $invoice->invoice_number . ' بواسطه ' . Auth::user()->name ,
-            'invoice_id' => $invoice->id ,
-            'user_id' =>  Auth::user()->id
-        ]);
+                'title' => 'تم اصافه فاتوره جديده ' . $invoice->invoice_number . ' بواسطه ' . Auth::user()->name ,
+                'invoice_id' => $invoice->id ,
+                'user_id' =>  Auth::user()->id
+            ]);
+        });
 
 
 
@@ -298,7 +287,10 @@ foreach ($movements as $movement) {
 
     public function getproducts($id)
     {
-        $products = DB::table("products")->where("section_id", $id)->pluck("Product_name", "id");
+        $products = DB::table("products")
+            ->join("product_section", "products.id", "=", "product_section.product_id")
+            ->where("product_section.section_id", $id)
+            ->pluck("products.name", "products.id");
         return json_encode($products);
     }
 
