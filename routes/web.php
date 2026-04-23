@@ -96,6 +96,7 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::post('/Status_Update/{id}'                      , [InvoiceController::class ,'Status_Updatee'])->name('Status_Updatee');
 
         Route::get('/section/{id}'                             , [InvoiceController::class , 'getproducts']);
+        Route::post('/invoices/check-availability'             , [InvoiceController::class , 'checkAvailability'])->name('invoices.checkAvailability');
         Route::get('/get_file/{file_name}/{invoice_number}'    , [InvoicesAttachmentsController::class , 'get_file'])->name('get_file');
         Route::get('/open_file/{file_name}/{invoice_number}'   , [InvoicesAttachmentsController::class , 'open_file'])->name('open_file');
         Route::delete('/attachments/destroy/{invoice_number}'  , [InvoicesAttachmentsController::class , 'destroy'])->name('attachments.destroy');

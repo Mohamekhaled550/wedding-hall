@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
 use Carbon\Carbon;
 
 
@@ -85,11 +86,13 @@ class InvoiceController extends Controller
 
 
         $product = Product::with('ingredients')->findOrFail($request->product_id);
+        $ingredientRequirements = $this->buildIngredientRequirements($product, (int) $request->number_of_people);
 
     $lowStockIngredients = [];
 
-    foreach ($product->ingredients as $ingredient) {
-        $required_qty = $ingredient->pivot->quantity_per_plate * $request->number_of_people;
+    foreach ($ingredientRequirements as $requirement) {
+        $ingredient = $requirement['ingredient'];
+        $required_qty = $requirement['required_qty'];
         $currentStock = $ingredient->current_stock;
 
         // التحقق من توفر المخزون الكافي
@@ -125,8 +128,9 @@ class InvoiceController extends Controller
             $data['customer_id'] = $customer->id;
             $invoice = Invoice::create($data);
 
-            foreach ($product->ingredients as $ingredient) {
-                $required_qty = $ingredient->pivot->quantity_per_plate * $request->number_of_people;
+            foreach ($ingredientRequirements as $requirement) {
+                $ingredient = $requirement['ingredient'];
+                $required_qty = $requirement['required_qty'];
 
                 StockMovement::create([
                     'ingredient_id' => $ingredient->id,
@@ -176,7 +180,7 @@ class InvoiceController extends Controller
 
 
 
-        return redirect(route('admin.invoices.index'))->with('success', 'Data Created Successfully');
+        return redirect(route('admin.invoices.index'))->with('success', 'تم حفظ الفاتورة بنجاح');
 
     }
 
@@ -292,6 +296,61 @@ foreach ($movements as $movement) {
             ->where("product_section.section_id", $id)
             ->pluck("products.name", "products.id");
         return json_encode($products);
+    }
+
+    public function checkAvailability(Request $request)
+    {
+        $request->validate([
+            'section_id' => 'required|exists:sections,id',
+            'product_id' => 'required|exists:products,id',
+            'number_of_people' => 'required|integer|min:1',
+            'due_date' => 'required|date',
+        ]);
+
+        $isBooked = Invoice::where('section_id', $request->section_id)
+            ->whereDate('due_date', $request->due_date)
+            ->exists();
+
+        $product = Product::with('ingredients')->findOrFail($request->product_id);
+        $ingredientRequirements = $this->buildIngredientRequirements($product, (int) $request->number_of_people);
+
+        $shortages = [];
+        foreach ($ingredientRequirements as $requirement) {
+            $ingredient = $requirement['ingredient'];
+            $required = $requirement['required_qty'];
+            $available = (float) $ingredient->current_stock;
+
+            if ($available < $required) {
+                $shortages[] = [
+                    'ingredient' => $ingredient->name,
+                    'required' => $required,
+                    'available' => $available,
+                    'unit' => $ingredient->unit,
+                ];
+            }
+        }
+
+        return response()->json([
+            'is_booked' => $isBooked,
+            'shortages' => $shortages,
+            'can_save' => !$isBooked && empty($shortages),
+        ]);
+    }
+
+    private function buildIngredientRequirements(Product $product, int $numberOfPeople): Collection
+    {
+        return $product->ingredients
+            ->groupBy('id')
+            ->map(function ($items) use ($numberOfPeople) {
+                $ingredient = $items->first();
+                $quantityPerPlate = $items->sum(fn ($item) => (float) $item->pivot->quantity_per_plate);
+
+                return [
+                    'ingredient' => $ingredient,
+                    'required_qty' => $quantityPerPlate * $numberOfPeople,
+                ];
+            })
+            ->values();
     }
 
     public function pay(string $id)
