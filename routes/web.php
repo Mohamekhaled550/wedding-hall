@@ -13,7 +13,7 @@ use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\InvoiceReportController;
-// use App\Http\Controllers\Dashboard\StockController;
+use App\Http\Controllers\Dashboard\StockController;
 use App\Http\Controllers\Dashboard\AccountantController;
 use App\Http\Controllers\Dashboard\StockMovementController;
 use App\Http\Controllers\Dashboard\ProductIngredientController;
@@ -74,7 +74,7 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::resource('invoices'   , InvoiceController::class);
         Route::resource('ingredients', \App\Http\Controllers\Dashboard\IngredientController::class);
         Route::resource('product-ingredients', \App\Http\Controllers\Dashboard\ProductIngredientController::class);
-        // Route::resource('stocks', \App\Http\Controllers\Dashboard\StockController::class);
+        Route::resource('stocks', StockController::class)->only(['index']);
         Route::resource('stock-movements', \App\Http\Controllers\Dashboard\StockMovementController::class)->except(['show']);
         Route::resource('categories', CategoryController::class);
         Route::resource('permissions',PermissionController::class);

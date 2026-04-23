@@ -109,12 +109,14 @@
             </div>
             @endif
 
-            <div class="menu-item mb-2">
-                <a href="{{ route('admin.ingredients.index') }}" class="menu-link text-dark">
-                    <span class="menu-icon"><i class="fas fa-boxes text-info"></i></span>
-                    <span class="menu-title">Stock</span>
-                </a>
-            </div>
+             @if (auth()->user()->hasPermission('stocks-read'))
+                <div class="menu-item mb-2">
+                    <a href="{{ route('admin.stocks.index') }}" class="menu-link text-dark">
+                        <span class="menu-icon"><i class="fas fa-warehouse text-info"></i></span>
+                        <span class="menu-title">Stock</span>
+                    </a>
+                </div>
+            @endif
 
 
                  @if (auth()->user()->hasPermission('stock-movements-read'))
