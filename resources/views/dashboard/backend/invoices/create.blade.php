@@ -22,8 +22,9 @@
 
     <div class="card-body">
 
-        <form action="{{ route('admin.invoices.store') }}" autocomplete="off" method="POST" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+        <form id="invoice-create-form" action="{{ route('admin.invoices.store') }}" autocomplete="off" method="POST" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
             @csrf
+            <div id="availability-alert" class="alert d-none mb-4"></div>
 
 {{-- ✅ بيانات العميل --}}
 <div class="row">
@@ -269,7 +270,7 @@ x
 
 
             <div class="text-center pt-15">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" id="submit-invoice-btn" class="btn btn-primary">
                     <span class="indicator-label">Submit</span>
                     <span class="indicator-progress">Please wait...</span>
                 </button>
@@ -338,6 +339,11 @@ function calculateTotal() {
     document.addEventListener("DOMContentLoaded", function () {
         let sectionSelect = document.getElementById("section_id");
         let productSelect = document.getElementById("product_id");
+        let peopleInput = document.getElementById("number_of_people");
+        let dueDateInput = document.getElementById("due_date");
+        let availabilityAlert = document.getElementById("availability-alert");
+        let submitBtn = document.getElementById("submit-invoice-btn");
+        let invoiceForm = document.getElementById("invoice-create-form");
 
         let productsData = @json($sections);
 
@@ -354,6 +360,74 @@ function calculateTotal() {
                     });
                 }
             }
+        });
+
+        function setAvailabilityMessage(type, message, canSave = true) {
+            availabilityAlert.className = `alert alert-${type} mb-4`;
+            availabilityAlert.innerHTML = message;
+            availabilityAlert.classList.remove('d-none');
+            submitBtn.disabled = !canSave;
+        }
+
+        function clearAvailabilityMessage() {
+            availabilityAlert.classList.add('d-none');
+            availabilityAlert.innerHTML = '';
+            submitBtn.disabled = false;
+        }
+
+        function checkAvailability() {
+            const sectionId = sectionSelect.value;
+            const productId = productSelect.value;
+            const numberOfPeople = peopleInput.value;
+            const dueDate = dueDateInput.value;
+
+            if (!sectionId || !productId || !numberOfPeople || !dueDate) {
+                clearAvailabilityMessage();
+                return;
+            }
+
+            fetch("{{ route('admin.invoices.checkAvailability') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    section_id: sectionId,
+                    product_id: productId,
+                    number_of_people: numberOfPeople,
+                    due_date: dueDate,
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.is_booked) {
+                    setAvailabilityMessage('danger', 'هذه القاعة محجوزة بالفعل في هذا اليوم.', false);
+                    return;
+                }
+
+                if (data.shortages && data.shortages.length) {
+                    let rows = data.shortages.map(item =>
+                        `- ${item.ingredient}: المطلوب ${item.required} ${item.unit} (المتاح ${item.available} ${item.unit})`
+                    ).join('<br>');
+                    setAvailabilityMessage('warning', `المخزون غير كافٍ:<br>${rows}`, false);
+                    return;
+                }
+
+                setAvailabilityMessage('success', 'المخزون كافٍ ويمكن حفظ الفاتورة.', true);
+            })
+            .catch(() => clearAvailabilityMessage());
+        }
+
+        [sectionSelect, productSelect, peopleInput, dueDateInput].forEach(element => {
+            element.addEventListener('change', checkAvailability);
+            element.addEventListener('input', checkAvailability);
+        });
+
+        invoiceForm.addEventListener('submit', function () {
+            submitBtn.disabled = true;
+            submitBtn.querySelector('.indicator-label').innerText = 'Saving...';
         });
     });
 </script>
@@ -425,5 +499,4 @@ function calculateTotal() {
 </script>
 
 @endsection
-
 
