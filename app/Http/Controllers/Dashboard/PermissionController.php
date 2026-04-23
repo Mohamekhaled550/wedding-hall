@@ -10,19 +10,22 @@ class PermissionController extends Controller
 {
     public function __construct()
     {
-
+        $this->middleware('permission:permissions-read')->only(['index']);
+        $this->middleware('permission:permissions-create')->only(['create', 'store']);
+        $this->middleware('permission:permissions-update')->only(['edit', 'update']);
+        $this->middleware('permission:permissions-delete')->only(['destroy']);
 
     }
 
     public function index()
     {
         $permissions = Permission::latest()->get();
-        return view('dashboard.backend.permissions.index', compact('permissions'));
+        return view('dashboard.backend.Permissions.index', compact('permissions'));
     }
 
     public function create()
     {
-        return view('dashboard.backend.permissions.create');
+        return view('dashboard.backend.Permissions.create');
     }
 
     public function store(Request $request)
@@ -31,7 +34,7 @@ class PermissionController extends Controller
             'name' => 'required|unique:permissions,name',
         ]);
 
-        Permission::create(['name' => $request->name, 'guard_name' => 'web']);
+        Permission::create(['name' => $request->name]);
 
         return redirect()->route('admin.permissions.index')->with('success', 'Permission Created!');
     }
@@ -39,7 +42,7 @@ class PermissionController extends Controller
     public function edit($id)
     {
         $permission = Permission::findOrFail($id);
-        return view('dashboard.backend.permissions.edit', compact('permission'));
+        return view('dashboard.backend.Permissions.edit', compact('permission'));
     }
 
     public function update(Request $request, $id)
