@@ -20,7 +20,7 @@
         </div>
         <div class="col-md-2">
             <label>Type</label>
-            <select name="movement_type" class="form-control">
+            <select name="type" class="form-control">
                 <option value="">-- All --</option>
                 <option value="in" {{ request('type') == 'in' ? 'selected' : '' }}>IN</option>
                 <option value="out" {{ request('type') == 'out' ? 'selected' : '' }}>OUT</option>
@@ -63,7 +63,7 @@
                     <td>{{ $movement->ingredient->name }}</td>
                     <td>{{ strtoupper($movement->type) }}</td>
                     <td>{{ $movement->quantity }}</td>
-                    <td>{{ $movement->note }}</td>
+                    <td>{{ $movement->source }}</td>
                     <td>{{ $movement->created_at }}</td>
                 </tr>
             @empty

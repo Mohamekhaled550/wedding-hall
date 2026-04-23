@@ -360,7 +360,7 @@ foreach ($movements as $movement) {
         return view('dashboard.backend.invoices.index', compact('invoices'));
     }
 
-    public function Invoice_Unpaid()
+    public function Invoice_Unpaid(Request $request)
     {
         $query = Invoice::where('value_status', 2); // فواتير مدفوعة
 

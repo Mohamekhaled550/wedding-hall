@@ -15,15 +15,16 @@ class UserSeeder extends Seeder
 
         $fake = Factory::create();
         
-       $admin = User::create([
+       $admin = User::firstOrCreate([
+            'email'              => 'admin@hall.local',
+        ], [
             'name'               => 'admin' ,
-            'email'              => 'admin@yahoo.com' ,
             'email_verified_at'  => now() ,
             'password'           => bcrypt('password') ,
             'type'               => 'admin' ,
         ]);
 
-        $admin->syncRoles(['admin' => 1]);
+        $admin->syncRoles(['superadmin']);
        
 
 

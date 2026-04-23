@@ -69,7 +69,7 @@ class StockMovementController extends Controller
         $movement = StockMovement::findOrFail($id);
         $ingredients = Ingredient::all();
         $invoices = Invoice::all();
-        return view('dashboard.backend.stock-movements.edit', compact('movement', 'ingredients', 'invoices'));
+        return view('dashboard.backend.stock_movements.edit', compact('movement', 'ingredients', 'invoices'));
     }
 
     public function update(Request $request, $id)
@@ -83,16 +83,14 @@ class StockMovementController extends Controller
         ]);
 
         $movement = StockMovement::findOrFail($id);
-        $movement->ingredient_id = $request->ingredient_id;
-        $movement->type = $request->type;
-        $movement->quantity = $request->quantity;
-        $movement->invoice_id = $request->invoice_id;
-        $movement->source = $request->source;
+        $oldIngredientId = $movement->ingredient_id;
+        $oldType = $movement->type;
+        $oldQuantity = $movement->quantity;
 
         $ingredient = Ingredient::findOrFail($request->ingredient_id);
         $currentStock = $ingredient->current_stock;
-        if ($movement->ingredient_id == $request->ingredient_id && $movement->type === 'out') {
-            $currentStock += $movement->quantity;
+        if ($oldIngredientId == $request->ingredient_id && $oldType === 'out') {
+            $currentStock += $oldQuantity;
         }
 
         if ($request->type === 'out' && $currentStock < $request->quantity) {
@@ -101,6 +99,11 @@ class StockMovementController extends Controller
             ]);
         }
 
+        $movement->ingredient_id = $request->ingredient_id;
+        $movement->type = $request->type;
+        $movement->quantity = $request->quantity;
+        $movement->invoice_id = $request->invoice_id;
+        $movement->source = $request->source;
         $movement->save();
 
         return redirect()->route('admin.stock-movements.index')->with('success', 'تم تعديل بيانات الحركة بنجاح.');

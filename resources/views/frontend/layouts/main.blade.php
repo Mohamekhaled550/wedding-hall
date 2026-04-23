@@ -295,9 +295,9 @@
                         <a class="nav-link" href="{{ route('frontend.contact') }}">اتصل بنا</a>
                     </li>
                 </ul>
-                <a href="{{ route('admin.login.redirect', ['redirect' => 'frontend']) }}" class="btn btn-primary-custom">
-                    <i class="bi bi-person-circle"></i> تسجيل الدخول
-                </a>
+                <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#bookingChannelsModal">
+                    <i class="bi bi-person-circle"></i> احجز / تواصل
+                </button>
             </div>
         </div>
     </nav>
@@ -361,6 +361,40 @@
             </div>
         </div>
     </footer>
+
+    <!-- Booking Channels Modal -->
+    <div class="modal fade" id="bookingChannelsModal" tabindex="-1" aria-labelledby="bookingChannelsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingChannelsModalLabel">اختار طريقة التواصل للحجز</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-grid gap-2">
+                    @if($settings->gmail)
+                        <a href="https://accounts.google.com/" target="_blank" class="btn btn-outline-danger">
+                            <i class="bi bi-google"></i> Google
+                        </a>
+                    @endif
+                    @if($settings->facebook)
+                        <a href="{{ $settings->facebook }}" target="_blank" class="btn btn-outline-primary">
+                            <i class="bi bi-facebook"></i> Facebook
+                        </a>
+                    @endif
+                    @if($settings->email)
+                        <a href="mailto:{{ $settings->email }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-envelope"></i> Email
+                        </a>
+                    @endif
+                    @if($settings->whatsapp)
+                        <a href="https://wa.me/{{ $settings->whatsapp }}" target="_blank" class="btn btn-outline-success">
+                            <i class="bi bi-whatsapp"></i> WhatsApp
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
