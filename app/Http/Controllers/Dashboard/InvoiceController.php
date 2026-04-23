@@ -101,7 +101,43 @@ if ($alreadyBooked) {
 
     $product = Product::with('ingredients')->find($request->product_id);
 
-foreach ($product->ingredients as $ingredient) {
+    $lowStockIngredients = [];
+
+    foreach ($product->ingredients as $ingredient) {
+        $required_qty = $ingredient->pivot->quantity_per_plate * $request->number_of_people;
+        $currentStock = $ingredient->current_stock;
+
+        // التحقق من توفر المخزون الكافي
+        if ($currentStock < $required_qty) {
+            $lowStockIngredients[] = [
+                'name' => $ingredient->name,
+                'required' => $required_qty,
+                'available' => $currentStock,
+                'unit' => $ingredient->unit
+            ];
+        }
+    }
+
+    // إذا كان هناك أصناف غير متوفرة، نعرض رسالة تحذير
+    if (!empty($lowStockIngredients)) {
+        $warningMessage = 'تحذير: المخزون غير كافٍ للأصناف التالية:<br>';
+        foreach ($lowStockIngredients as $item) {
+            $warningMessage .= "- {$item['name']}:需要的 {$item['required']} {$item['unit']} (المتاح: {$item['available']} {$item['unit']})<br>";
+        }
+
+        // إنشاء إشعار للمخزون المنخفض
+        Notification::create([
+            'title' => 'تحذير: مخزون غير كافٍ للفاتورة #' . $invoice->invoice_number,
+            'invoice_id' => $invoice->id,
+            'user_id' => Auth::user()->id
+        ]);
+
+        return redirect()->route('admin.invoices.index')
+            ->with('warning', $warningMessage);
+    }
+
+    // إذا كان المخزون كافياً، يتم السحب
+    foreach ($product->ingredients as $ingredient) {
         $required_qty = $ingredient->pivot->quantity_per_plate * $request->number_of_people;
 
         StockMovement::create([

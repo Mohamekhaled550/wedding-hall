@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // فحص المخزون المنخفض كل يوم في الساعة 8 صباحاً
+        $schedule->job(new \App\Jobs\CheckLowStockJob())->dailyAt('08:00');
     }
 
     /**

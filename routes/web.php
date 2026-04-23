@@ -13,7 +13,7 @@ use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\InvoiceReportController;
-use App\Http\Controllers\Dashboard\StockController;
+// use App\Http\Controllers\Dashboard\StockController;
 use App\Http\Controllers\Dashboard\AccountantController;
 use App\Http\Controllers\Dashboard\StockMovementController;
 use App\Http\Controllers\Dashboard\ProductIngredientController;
@@ -37,7 +37,11 @@ use Spatie\Permission\Contracts\Role;
 |
 */
 
-Route::get('/'                  , [AuthController::class , 'show_login'])->name('login');
+// Frontend home page
+Route::get('/', [\App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('frontend.home');
+
+// Admin login
+Route::get('/admin/login', [AuthController::class , 'show_login'])->name('login');
 Route::post('login-post'        , [AuthController::class , 'login'])->name('login.post');
 Route::get('/logout'            , [AuthController::class , 'logout'])->name('logout');
 Route::get('reset-password'     , [AdminController::class , 'resetPassword'])->name('reset-password');
@@ -69,7 +73,7 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::resource('invoices'   , InvoiceController::class);
         Route::resource('ingredients', \App\Http\Controllers\Dashboard\IngredientController::class);
         Route::resource('product-ingredients', \App\Http\Controllers\Dashboard\ProductIngredientController::class);
-        Route::resource('stocks', \App\Http\Controllers\Dashboard\StockController::class);
+        // Route::resource('stocks', \App\Http\Controllers\Dashboard\StockController::class);
         Route::resource('stock-movements', \App\Http\Controllers\Dashboard\StockMovementController::class)->except(['show']);
         Route::resource('categories', CategoryController::class);
         Route::resource('permissions',PermissionController::class);
@@ -113,15 +117,17 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::get('stock-movements/report', [StockMovementController::class, 'report'])->name('stock-movements.report');
 Route::get('/accountant/dashboard', [AccountantController::class, 'index'])->name('accountant.dashboard');
 
-
-
-
-
-
-
-
-
-
     });
 
 });
+
+/*
+|--------------------------------------------------------------------------
+| Frontend Routes - واجهة القاعة
+|--------------------------------------------------------------------------
+*/
+Route::get('/home', [\App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('frontend.home');
+Route::get('/services', [\App\Http\Controllers\Frontend\HomeController::class, 'services'])->name('frontend.services');
+Route::get('/gallery', [\App\Http\Controllers\Frontend\HomeController::class, 'gallery'])->name('frontend.gallery');
+Route::get('/contact', [\App\Http\Controllers\Frontend\HomeController::class, 'contact'])->name('frontend.contact');
+Route::get('/about', [\App\Http\Controllers\Frontend\HomeController::class, 'about'])->name('frontend.about');
