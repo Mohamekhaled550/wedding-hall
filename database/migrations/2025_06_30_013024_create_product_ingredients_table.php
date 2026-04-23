@@ -16,6 +16,7 @@ return new class extends Migration
     $table->foreignId('product_id')->constrained()->onDelete('cascade');
     $table->foreignId('ingredient_id')->constrained()->onDelete('cascade');
     $table->decimal('quantity_per_plate', 10, 2); // الكمية المطلوبة لكل طبق للفرد
+    $table->unique(['product_id', 'ingredient_id']);
     $table->timestamps();
 });
 

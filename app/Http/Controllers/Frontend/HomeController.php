@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Section;
-use App\Models\Product;
 use App\Models\Setting;
-use Illuminate\Http\Request;
+use App\Models\Invoice;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -45,5 +45,27 @@ class HomeController extends Controller
         $settings = Setting::first();
 
         return view('frontend.about', compact('settings'));
+    }
+
+    public function calendar()
+    {
+        $settings = Setting::first();
+
+        $bookings = Invoice::query()
+            ->select(['due_date', 'section_id'])
+            ->with('section:id,name')
+            ->whereDate('due_date', '>=', now()->startOfMonth())
+            ->orderBy('due_date')
+            ->get()
+            ->groupBy(fn ($invoice) => Carbon::parse($invoice->due_date)->format('Y-m-d'))
+            ->map(function ($items, $date) {
+                return [
+                    'date' => $date,
+                    'halls' => $items->pluck('section.name')->filter()->values()->all(),
+                ];
+            })
+            ->values();
+
+        return view('frontend.calendar', compact('settings', 'bookings'));
     }
 }

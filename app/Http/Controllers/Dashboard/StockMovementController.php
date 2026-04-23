@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\StockMovement;
 use App\Models\Ingredient;
 use App\Models\Invoice;
+use Illuminate\Validation\ValidationException;
 
 class StockMovementController extends Controller
 {
@@ -39,6 +40,7 @@ class StockMovementController extends Controller
             'type' => 'required|in:in,out',
             'quantity' => 'required|numeric|min:0.01',
             'invoice_id' => 'nullable|exists:invoices,id',
+            'source' => 'nullable|string|max:255',
         ]);
 
         $movement = new StockMovement();
@@ -46,6 +48,17 @@ class StockMovementController extends Controller
         $movement->type = $request->type;
         $movement->quantity = $request->quantity;
         $movement->invoice_id = $request->invoice_id;
+        $movement->source = $request->source;
+
+        if ($request->type === 'out') {
+            $ingredient = Ingredient::findOrFail($request->ingredient_id);
+            if ($ingredient->current_stock < $request->quantity) {
+                throw ValidationException::withMessages([
+                    'quantity' => 'لا يمكن صرف كمية أكبر من المخزون المتاح.',
+                ]);
+            }
+        }
+
         $movement->save();
 
         return redirect()->route('admin.stock-movements.index')->with('success', 'تم تسجيل الحركة بنجاح.');
@@ -56,7 +69,7 @@ class StockMovementController extends Controller
         $movement = StockMovement::findOrFail($id);
         $ingredients = Ingredient::all();
         $invoices = Invoice::all();
-        return view('dashboard.backend.stock-movements.edit', compact('movement', 'ingredients', 'invoices'));
+        return view('dashboard.backend.stock_movements.edit', compact('movement', 'ingredients', 'invoices'));
     }
 
     public function update(Request $request, $id)
@@ -66,13 +79,31 @@ class StockMovementController extends Controller
             'type' => 'required|in:in,out',
             'quantity' => 'required|numeric|min:0.01',
             'invoice_id' => 'nullable|exists:invoices,id',
+            'source' => 'nullable|string|max:255',
         ]);
 
         $movement = StockMovement::findOrFail($id);
+        $oldIngredientId = $movement->ingredient_id;
+        $oldType = $movement->type;
+        $oldQuantity = $movement->quantity;
+
+        $ingredient = Ingredient::findOrFail($request->ingredient_id);
+        $currentStock = $ingredient->current_stock;
+        if ($oldIngredientId == $request->ingredient_id && $oldType === 'out') {
+            $currentStock += $oldQuantity;
+        }
+
+        if ($request->type === 'out' && $currentStock < $request->quantity) {
+            throw ValidationException::withMessages([
+                'quantity' => 'لا يمكن صرف كمية أكبر من المخزون المتاح.',
+            ]);
+        }
+
         $movement->ingredient_id = $request->ingredient_id;
         $movement->type = $request->type;
         $movement->quantity = $request->quantity;
         $movement->invoice_id = $request->invoice_id;
+        $movement->source = $request->source;
         $movement->save();
 
         return redirect()->route('admin.stock-movements.index')->with('success', 'تم تعديل بيانات الحركة بنجاح.');
@@ -89,7 +120,7 @@ public function report(Request $request)
 {
     $movements = StockMovement::with('ingredient')
         ->when($request->ingredient_id, fn($q) => $q->where('ingredient_id', $request->ingredient_id))
-        ->when($request->type, fn($q) => $q->where('movement_type', $request->movement_type))
+        ->when($request->type, fn($q) => $q->where('type', $request->type))
         ->when($request->from, fn($q) => $q->whereDate('created_at', '>=', $request->from))
         ->when($request->to, fn($q) => $q->whereDate('created_at', '<=', $request->to))
         ->latest()

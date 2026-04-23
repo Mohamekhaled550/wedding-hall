@@ -16,13 +16,18 @@ return [
             'roles'   => 'c,r,u,d',
             'admins'   => 'c,r,u,d',
             'users'    => 'c,r,u,d',
+            'permissions' => 'c,r,u,d',
             'invoices' => 'c,r,u,d',
             'ingredients' => 'c,r,u,d',
             'products-ingredients' => 'c,r,u,d',
-            'stocks' => 'c,r,u,d', // ✅ جديدة
-            'stock-movements' => 'c,r,u,d', // ✅ جديدة
+            'stocks' => 'c,r,u,d',
+            'stock-movements' => 'c,r,u,d',
             'sections' => 'c,r,u,d',
             'products' => 'c,r,u,d',
+            'categories' => 'c,r,u,d',
+            'customers' => 'c,r,u,d',
+            'expenses' => 'c,r,u,d',
+            'reports' => 'c,r,u,d',
             'settings' => 'c,r,u,d',
             'profile' => 'r,u',
 

@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function show_login() {
+        if (request()->route('redirect') === 'frontend') {
+            session(['post_login_redirect' => route('frontend.home')]);
+        }
+
         return view('dashboard.auth.login');
     }
 
@@ -29,17 +33,20 @@ return $this->authenticated($request, Auth::user());
     }
 
     protected function authenticated(Request $request, $user)
-{
-    if ($user->hasRole('Accountant')) {
-        return redirect()->route('admin.accountant.dashboard');
-    } elseif ($user->hasRole('superadmin')) {
-        return redirect()->route('admin.home');
+    {
+        if ($redirect = session()->pull('post_login_redirect')) {
+            return redirect()->to($redirect);
+        }
+
+        if ($user->hasRole('Accountant')) {
+            return redirect()->route('admin.accountant.dashboard');
+        } elseif ($user->hasRole('superadmin')) {
+            return redirect()->route('admin.home');
+        }
+
+        return redirect()->route('frontend.home');
     }
 
-    return redirect('/'); // default
-}
-
 
 }
-
 

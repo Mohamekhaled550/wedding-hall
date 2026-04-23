@@ -11,15 +11,15 @@ class SettingSeeder extends Seeder
     
     public function run(): void
     {
-        Setting::create([
-            'facebook'    => 'facebook' ,
-            'youtube'    => 'youtube' ,
-            'twitter'    => 'twitter' ,
-            'phone'    => 'phone' ,
-            'whatsapp'    => 'whatsapp' ,
-            'location'    => 'location' ,
-            'email'    => 'email@yahoo.com' ,
-            'gmail'    => 'gmail@yahoo.com' ,
+        Setting::updateOrCreate(['type' => 'setting'], [
+            'facebook'    => 'https://facebook.com' ,
+            'youtube'    => 'https://youtube.com' ,
+            'twitter'    => 'https://x.com' ,
+            'phone'    => '201000000000' ,
+            'whatsapp'    => '201000000000' ,
+            'location'    => 'Cairo' ,
+            'email'    => 'info@hall.local' ,
+            'gmail'    => 'info@hall.local' ,
             'type'    => 'setting' ,
         ]);
     }

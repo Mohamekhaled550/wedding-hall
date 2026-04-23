@@ -13,7 +13,7 @@ use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\InvoiceReportController;
-// use App\Http\Controllers\Dashboard\StockController;
+use App\Http\Controllers\Dashboard\StockController;
 use App\Http\Controllers\Dashboard\AccountantController;
 use App\Http\Controllers\Dashboard\StockMovementController;
 use App\Http\Controllers\Dashboard\ProductIngredientController;
@@ -42,6 +42,7 @@ Route::get('/', [\App\Http\Controllers\Frontend\HomeController::class, 'index'])
 
 // Admin login
 Route::get('/admin/login', [AuthController::class , 'show_login'])->name('login');
+Route::get('/admin/login/{redirect?}', [AuthController::class , 'show_login'])->name('admin.login.redirect');
 Route::post('login-post'        , [AuthController::class , 'login'])->name('login.post');
 Route::get('/logout'            , [AuthController::class , 'logout'])->name('logout');
 Route::get('reset-password'     , [AdminController::class , 'resetPassword'])->name('reset-password');
@@ -73,7 +74,7 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::resource('invoices'   , InvoiceController::class);
         Route::resource('ingredients', \App\Http\Controllers\Dashboard\IngredientController::class);
         Route::resource('product-ingredients', \App\Http\Controllers\Dashboard\ProductIngredientController::class);
-        // Route::resource('stocks', \App\Http\Controllers\Dashboard\StockController::class);
+        Route::resource('stocks', StockController::class)->only(['index']);
         Route::resource('stock-movements', \App\Http\Controllers\Dashboard\StockMovementController::class)->except(['show']);
         Route::resource('categories', CategoryController::class);
         Route::resource('permissions',PermissionController::class);
@@ -95,6 +96,7 @@ Route::prefix('admin')->middleware('localization')->name('admin.')->group(functi
         Route::post('/Status_Update/{id}'                      , [InvoiceController::class ,'Status_Updatee'])->name('Status_Updatee');
 
         Route::get('/section/{id}'                             , [InvoiceController::class , 'getproducts']);
+        Route::post('/invoices/check-availability'             , [InvoiceController::class , 'checkAvailability'])->name('invoices.checkAvailability');
         Route::get('/get_file/{file_name}/{invoice_number}'    , [InvoicesAttachmentsController::class , 'get_file'])->name('get_file');
         Route::get('/open_file/{file_name}/{invoice_number}'   , [InvoicesAttachmentsController::class , 'open_file'])->name('open_file');
         Route::delete('/attachments/destroy/{invoice_number}'  , [InvoicesAttachmentsController::class , 'destroy'])->name('attachments.destroy');
@@ -131,3 +133,5 @@ Route::get('/services', [\App\Http\Controllers\Frontend\HomeController::class, '
 Route::get('/gallery', [\App\Http\Controllers\Frontend\HomeController::class, 'gallery'])->name('frontend.gallery');
 Route::get('/contact', [\App\Http\Controllers\Frontend\HomeController::class, 'contact'])->name('frontend.contact');
 Route::get('/about', [\App\Http\Controllers\Frontend\HomeController::class, 'about'])->name('frontend.about');
+
+Route::get('/calendar', [\App\Http\Controllers\Frontend\HomeController::class, 'calendar'])->name('frontend.calendar');

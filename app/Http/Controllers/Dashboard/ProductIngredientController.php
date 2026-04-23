@@ -44,7 +44,15 @@ class ProductIngredientController extends Controller
             'quantity_per_plate' => 'required|numeric|min:0',
         ]);
 
-        ProductIngredient::create($request->all());
+        ProductIngredient::updateOrCreate(
+            [
+                'product_id' => $request->product_id,
+                'ingredient_id' => $request->ingredient_id,
+            ],
+            [
+                'quantity_per_plate' => $request->quantity_per_plate,
+            ]
+        );
         return redirect()->route('admin.product-ingredients.index')->with('success', 'Ingredient added to product!');
     }
 
