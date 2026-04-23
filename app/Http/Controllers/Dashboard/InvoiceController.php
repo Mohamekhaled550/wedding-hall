@@ -117,7 +117,7 @@ class InvoiceController extends Controller
             ->with('warning', $warningMessage);
     }
 
-        DB::transaction(function () use ($request, $data, $product) {
+        DB::transaction(function () use ($request, $data, $product, $ingredientRequirements) {
             $customer = Customer::create([
                 'name'    => $request->customer_name,
                 'email'   => $request->customer_email,
